@@ -1,0 +1,498 @@
+@import "../_/imports";
+
+$sectionsHeight: calc(100vh - $header__height);
+
+.main__page {
+  display: grid;
+  grid-template-columns: 30% 45% 25%;
+  background-color: $whity;
+
+  &,
+  & > * {
+    min-height: $sectionsHeight;
+  }
+
+  & > * {
+    padding: 2rem 1rem;
+  }
+}
+
+#feed {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding-inline: 3rem;
+
+  .feed {
+    width: 100%;
+    min-height: 300px;
+    background-color: $white;
+    border-radius: 4px;
+    overflow: hidden;
+
+    @extend .box__shadow;
+
+    .image {
+      max-width: 100%;
+    }
+
+    .feed__card__top {
+      padding: 0.5rem 0.8rem;
+      .user__and__actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .profile {
+          @extend .user__profile;
+
+          .about__feed {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.2rem;
+            flex-direction: column;
+          }
+        }
+
+        .actions {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 0.6rem;
+
+          .action {
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.08s ease-in;
+
+            @extend .center;
+
+            &:hover {
+              background-color: $black;
+              svg {
+                stroke: #fff;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .feed__description {
+      padding: 1rem 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .bottom {
+      padding: 0.5rem 1rem;
+
+      .stats {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .emoji {
+          font-size: 1.4rem;
+        }
+
+        .counters {
+          font-size: 0.9rem;
+        }
+      }
+
+      .user__actions__on__feed {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        gap: 0.5rem;
+
+        .action {
+          width: fit-content;
+          padding: 0.5rem 0.8rem;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          cursor: pointer;
+          transition: 0.3s ease-out;
+
+          &:hover {
+            background-color: $black;
+            color: $white;
+            svg {
+              stroke: $white;
+            }
+          }
+        }
+      }
+
+      .comments {
+        padding: 0 1rem;
+        font-size: 0.9rem;
+        height: 0;
+        transition: 0.4s ease-in;
+        overflow: hidden;
+
+        &.expand {
+          height: 100%;
+          padding-block: 1rem;
+        }
+
+        .timeline {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+          position: relative;
+
+          &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background-color: $whity;
+            width: 5px;
+            border-radius: 20px;
+          }
+
+          .container {
+            padding: 0.5rem 1rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: 0.6rem;
+            min-height: 100px;
+
+            &::before {
+              content: "";
+              display: block;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background-color: $black;
+              left: -7.5px;
+              top: 20%;
+              position: absolute;
+            }
+          }
+
+          .card {
+            width: 100%;
+            height: 100%;
+            padding: 0 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+            justify-content: flex-start;
+
+            .profile {
+              @extend .user__profile;
+            }
+
+            .top {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 1rem;
+
+              .actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 0.4rem;
+              }
+
+              .action {
+                background-color: transparent;
+                cursor: pointer;
+                @extend .center;
+              }
+            }
+
+            .card__bottom {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 1rem;
+
+              .actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 0.5rem;
+
+                .action {
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  gap: 0.3rem;
+                  padding: 0.2rem 0.7rem;
+                  border-radius: 20px;
+                  cursor: pointer;
+                  transition: 0.3s ease-out;
+
+                  .icon {
+                    @extend .center;
+                  }
+
+                  &:hover {
+                    background-color: $black;
+                    color: $white;
+                    svg {
+                      stroke: $white;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.left__sidebar {
+  .contained {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.8rem;
+
+    position: sticky;
+    top: 2rem;
+  }
+
+  .filter__and__search {
+    background-color: $white;
+    @extend .box__shadow;
+    padding: 1rem;
+    border-radius: 4px;
+
+    .contain__input {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      border: 2px solid $black;
+      border-radius: 3px;
+      overflow: hidden;
+
+      input {
+        width: 100%;
+      }
+
+      input,button {
+        padding: .3rem .5rem;
+        background-color: transparent;
+      }
+    }
+  }
+
+  #new__post__form {
+    min-height: 100px;
+    background-color: $white;
+    padding: 1rem;
+    border-radius: 4px;
+    @extend .box__shadow;
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .wrap__input {
+      font-size: 0.8rem;
+      padding-block: 1rem;
+      textarea {
+        width: 100%;
+        border-radius: 3px;
+        padding: 1rem;
+        border: 2px solid $black;
+        margin-top: 0.5rem;
+        resize: none;
+        min-height: 150px;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+
+      button {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        @extend .center;
+        cursor: pointer;
+        transition: 0.2s ease-in;
+
+        &:hover {
+          background-color: $black;
+          svg {
+            stroke: $white;
+          }
+        }
+      }
+    }
+
+    .chosen__medias {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      padding-block: 1rem;
+      display: none;
+
+      &.chosen__medias__exist {
+        display: grid;
+      }
+
+      .media__container {
+        position: relative;
+
+        .blur {
+          position: absolute;
+          inset: 0;
+          background-color: rgba($color: #000000, $alpha: 0.3);
+          backdrop-filter: blur(1px);
+          opacity: 0;
+          pointer-events: none;
+          // transition: 0.3s ease-out;
+
+          .remove__media {
+            background-color: transparent;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+          }
+
+          &.show {
+            opacity: 1;
+            pointer-events: all;
+          }
+        }
+      }
+    }
+
+    .post__a__feed {
+      @extend .button__text__and__icon;
+    }
+  }
+
+  .gen__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 	.5rem;
+
+    button {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      @extend .center;
+      @extend .box__shadow;
+      cursor: pointer;
+
+      background-color: $black;
+    }
+  }
+}
+
+.right__sidebar {
+  .contained {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .list__notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    justify-content: flex-start;
+    list-style-type: none;
+
+    li {
+      display: block;
+      border-radius: 3px;
+      background-color: $white;
+      @extend .box__shadow;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+
+      .icon {
+        @extend .center;
+        cursor: pointer;
+        background-color: transparent;
+      }
+    }
+
+    .simple__notif {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .user__name {
+        font-weight: bold;
+      }
+    }
+
+    .new__post__notif {
+      .notif__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        .actions {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 0.6rem;
+        }
+      }
+
+      .image {
+        padding-block: 0.5rem;
+        overflow: hidden;
+        height: 150px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-position: center;
+        }
+      }
+
+      // Clamp the text only if there is an image
+      &:has(.image) .description {
+        p {
+          @include clamp($lines: 2);
+        }
+      }
+
+      // Crop the image only if there is a description text
+      &:has(.description) .image {
+        height: 100px;
+      }
+    }
+  }
+}
