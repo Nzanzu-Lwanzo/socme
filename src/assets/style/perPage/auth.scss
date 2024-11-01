@@ -1,0 +1,90 @@
+@import "../_/imports";
+
+.auth__page {
+  background-color: $whity;
+  height: 100vh;
+  overflow: hidden;
+  @extend .center;
+
+  .auth__card {
+    width: 500px;
+    min-height: 100px;
+    background-color: $white;
+    padding: 1rem;
+    border-radius: 3px;
+    @extend .box__shadow;
+
+    .card__name {
+      font-size: 2rem;
+    }
+
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+      justify-content: flex-start;
+      padding: 1rem;
+    }
+
+    .wrap__input {
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      input {
+        border: 2px solid $black;
+        padding: 0.5rem;
+        width: 100%;
+        border-radius: 3px;
+      }
+    }
+
+    .submit__button {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 3px;
+      background-color: $black;
+      color: $white;
+      cursor: pointer;
+      border: 2px solid $black;
+      transition: 0.3s ease-out;
+
+      &:hover {
+        background-color: transparent;
+        color: $black;
+      }
+    }
+
+    .o__auth {
+      padding: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: .3s ease-out;
+
+      &:hover {
+        background-color: $black;
+        color: $white;
+      }
+    }
+
+    .switcher {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: blue;
+      text-decoration: none;
+
+      &::after,
+      &::before {
+        content: "";
+        background-color: $black;
+        height: 2px;
+        width: 100px;
+      }
+    }
+  }
+}

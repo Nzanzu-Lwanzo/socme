@@ -1,5 +1,5 @@
 import UserProfile from "../../cross-app/UserProfile";
-import { ImagePlus, Clapperboard, Newspaper } from "lucide-react";
+import { ImagePlus, Clapperboard, Newspaper, Calendar } from "lucide-react";
 import ImageChosen from "../_components/ChosenMediaElt";
 
 const Form = () => {
@@ -36,12 +36,20 @@ const Form = () => {
         <ImageChosen />
         <ImageChosen />
       </div>
-      <button type="submit" className="post__a__feed">
-        <span>Post a feed</span>
-        <span className="icon">
-          <Newspaper size={20} />
-        </span>
-      </button>
+      <div className="submitters">
+        <button type="submit" className="post__a__feed">
+          <span>Post a feed</span>
+          <span className="icon">
+            <Newspaper size={20} />
+          </span>
+        </button>
+        <button type="button" className="post__a__feed">
+          <span>Plan a post</span>
+          <span className="icon">
+            <Calendar size={20} />
+          </span>
+        </button>
+      </div>
     </form>
   );
 };

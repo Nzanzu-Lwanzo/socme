@@ -24,13 +24,13 @@ const CommentElt = () => {
             <span className="icon">
               <ThumbsUp size={16} />
             </span>
-            <span>10 likes</span>
+            <span className="icon__text">10 likes</span>
           </button>
           <button type="button" className="dislike action">
             <span className="icon">
               <ThumbsDown size={16} />
             </span>
-            <span>10 pouah</span>
+            <span className="icon__text">10 pouah</span>
           </button>
         </div>
         <div className="infos">

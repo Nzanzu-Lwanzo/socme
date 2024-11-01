@@ -9,6 +9,9 @@ const FilterAndSearch = () => {
           <Search />
         </button>
       </div>
+      <div className="actions">
+        <button type="button" className="action">My posts</button>
+      </div>
     </div>
   );
 };
