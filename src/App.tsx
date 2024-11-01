@@ -13,8 +13,7 @@ import useAppStore from "./stores/AppStore";
 import { fbAuth } from "./firebase/config";
 
 function App() {
-  // const auth = fbAuth.currentUser || useAppStore((state) => state.auth);
-  const auth = true;
+  const auth = fbAuth.currentUser || useAppStore((state) => state.auth) || true;
 
   return (
     <>
