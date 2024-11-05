@@ -6,7 +6,7 @@ const NavBar = () => {
     <header className="main__header">
       <div className="logo"></div>
       <div className="actions">
-        <NavLink to="/settings" className="header__btn">
+        <NavLink to="/notifications" className="header__btn">
           <BellDot size={20} />
         </NavLink>
         <NavLink to="/settings" className="header__btn">
@@ -15,7 +15,6 @@ const NavBar = () => {
         <NavLink to="/profile" className="header__btn">
           <User size={20} />
         </NavLink>
-
         <NavLink to="/add-post" className="header__btn">
           <Plus size={20} />
         </NavLink>

@@ -41,12 +41,12 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: .5rem;
-  font-size: .8rem;
+  gap: 0.5rem;
+  font-size: 0.8rem;
   background-position: transparent;
   border: 1px solid $black;
   border-radius: 3px;
-  padding: .4rem .5rem;
+  padding: 0.4rem 0.5rem;
   cursor: pointer;
   color: inherit;
   text-decoration: none;
@@ -54,12 +54,29 @@
   &:hover {
     background-color: $black;
     color: $white;
-    svg{
+    svg {
       stroke: $white;
     }
   }
 
   .icon {
     @extend .center;
+  }
+}
+
+.button__icon {
+  color: inherit;
+  height: 30px;
+  width: 30px;
+  background-color: $whity;
+  border-radius: 50%;
+  @extend .center;
+  transition: 0.3s ease-out;
+
+  &:hover {
+    background-color: $black;
+    svg {
+      stroke: $white;
+    }
   }
 }

@@ -1,22 +1,22 @@
 import UserProfile from "../../cross-app/UserProfile";
-import { ImagePlus, Clapperboard, Newspaper, Calendar } from "lucide-react";
-import ImageChosen from "../_components/ChosenMediaElt";
+import { Newspaper, Calendar } from "lucide-react";
+import SelectMedias from "./SelectMedias";
+import useFeedFormStore from "../../../stores/FeedFormStore";
+import ListMedias from "../_components/ListMedias";
+import { FormEvent } from "react";
 
 const Form = () => {
-  const chosenMedias = [1];
+  const files = useFeedFormStore((state) => state.files);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
 
   return (
-    <form action="#" method="post" id="new__post__form">
+    <form action="#" method="post" id="new__post__form" onSubmit={handleSubmit}>
       <div className="top">
         <UserProfile />
-        <div className="buttons">
-          <button type="button">
-            <Clapperboard size={20} />
-          </button>
-          <button type="button">
-            <ImagePlus size={20} />
-          </button>
-        </div>
+        <SelectMedias />
       </div>
 
       <div className="wrap__input">
@@ -30,11 +30,10 @@ const Form = () => {
 
       <div
         className={`chosen__medias ${
-          chosenMedias.length > 0 ? "chosen__medias__exist" : null
+          files.length > 0 ? "chosen__medias__exist" : null
         }`}
       >
-        <ImageChosen />
-        <ImageChosen />
+        <ListMedias />
       </div>
       <div className="submitters">
         <button type="submit" className="post__a__feed">

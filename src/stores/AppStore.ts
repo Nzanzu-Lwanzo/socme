@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { User } from "../types/interfaces";
 
-export type ModalSectionType = "SETTINGS" | "PROFILE" | null
+export type ModalSectionType = "SETTINGS" | "PROFILE" | null;
 
 interface State {
   auth: User | undefined;

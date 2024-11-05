@@ -1,0 +1,35 @@
+@import "../_/imports";
+
+.notifications__page {
+  @extend .center;
+  width: 100%;
+  min-height: 100vh;
+  gap: 1rem;
+
+  .container {
+    width: 40%;
+    height: 100%;
+    background-color: transparent;
+  }
+}
+
+@media only all and (max-width: 1200px) {
+  .mobile__pages__sub__topbar,
+  .notifications__page .container {
+    width: 60%;
+  }
+}
+
+@media only all and (max-width: 900px) {
+  .mobile__pages__sub__topbar,
+  .notifications__page .container {
+    width: 70%;
+  }
+}
+
+@media only all and (max-width: 700px) {
+  .mobile__pages__sub__topbar,
+  .notifications__page .container {
+    width: 90%;
+  }
+}
