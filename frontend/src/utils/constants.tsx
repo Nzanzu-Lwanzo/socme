@@ -20,4 +20,4 @@ const MAP_ENV_ORIGIN = {
   dev: "http://localhost:5000",
 };
 
-export const BASE_URL = MAP_ENV_ORIGIN[ENV];
+export const BASE_URL = MAP_ENV_ORIGIN[ENV] + "/api";

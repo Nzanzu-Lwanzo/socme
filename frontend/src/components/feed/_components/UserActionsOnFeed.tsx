@@ -1,4 +1,4 @@
-import { ThumbsUp, ThumbsDown, Reply, Eye } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Reply, Eye, Image } from "lucide-react";
 
 const UserActionsOnFeed = ({
   onReplyIconClick,
@@ -21,6 +21,10 @@ const UserActionsOnFeed = ({
       </button>
       <button className="seen action">
         <Eye size={20} />
+        <span>10</span>
+      </button>
+      <button className="count__images action">
+        <Image size={20} />
         <span>10</span>
       </button>
     </div>

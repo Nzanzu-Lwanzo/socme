@@ -10,10 +10,13 @@ import userRouter from "./backend/routes/user.mjs";
 import commentRouter from "./backend/routes/comment.mjs";
 import webpush from "web-push";
 import cors from "cors";
+import session from "express-session";
 
 // VARIABLES AND CONSTANTS
 const App = express();
+const ENV = "dev";
 const PORT = process.env.PORT || 5000;
+const SECRET = process.env.SECRET;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PATH_TO_PAGE = "/frontend/dist";
 const WEB_PUSH_MAIL = "mailto:nzanzu.lwanzo.work@gmail.com";
@@ -37,12 +40,27 @@ App.use(
     credentials: true,
   })
 );
+if (ENV !== "dev") {
+  App.set("trust proxy", 1);
+}
+App.use(
+  session({
+    secret: SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: ENV !== "dev",
+      secure: ENV !== "dev",
+      sameSite: ENV !== "dev" && "none",
+    },
+  })
+);
 
 // ROUTES
-App.route("/api");
-App.use("/comment", commentRouter);
-App.use("/user", userRouter);
-App.use("/post", postRouter);
+App.use("/api/comment", commentRouter);
+App.use("/api/user", userRouter);
+App.use("/api/post", postRouter);
 
 App.get("*", (req, res) => {
   // Always serve the app page as the unique static file

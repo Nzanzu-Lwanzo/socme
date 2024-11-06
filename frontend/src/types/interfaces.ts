@@ -3,3 +3,6 @@ export interface User {
   picture: string | null;
   name: string | null;
 }
+export interface UserToCreate extends User {
+  password: string;
+}

@@ -18,3 +18,31 @@ export const subscribeToPushNotifications = (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const createAccount = async (req, res) => {
+  console.log(req.body);
+  try {
+    const account = await User.create(req.body);
+    res.status(201).json(account);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+};
+
+export const getAccount = async (req, res) => {
+  try {
+    const account = await User.findById(req.user._id);
+    res.json(account);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+};
+
+export const logUserIn = async (req, res) => {
+  try {
+    console.log(req.session);
+    res.sendStatus(200).json({});
+  } catch (e) {
+    res.sendStatus(500);
+  }
+};

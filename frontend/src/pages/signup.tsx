@@ -1,32 +1,18 @@
 import AuthParent from "../components/auth/AuthParent";
-import { UserToAuthenticate } from "../types/types";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { fbAuth } from "../firebase/config";
-import useAppStore from "../stores/AppStore";
+import { UserToAuthenticateStateType } from "../types/types";
 import { validateToAuthenticateUser } from "../utils/validators";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const setAuth = useAppStore((state) => state.setAuth);
   const navigateTo = useNavigate();
 
-  const handleSubmit = async (user: UserToAuthenticate) => {
+  const handleSubmit = async (user: UserToAuthenticateStateType) => {
     try {
       if (!validateToAuthenticateUser(user)) {
         throw new Error("INVALID_DATA_ERROR");
       }
-      const { user: account } = await createUserWithEmailAndPassword(
-        fbAuth,
-        user.email,
-        user.password
-      );
 
       // Save the account data in a state
-      setAuth({
-        email: account.email,
-        name: account.displayName,
-        picture: account.photoURL,
-      });
 
       navigateTo("/");
     } catch (e) {

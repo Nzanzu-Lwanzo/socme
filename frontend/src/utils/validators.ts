@@ -1,7 +1,7 @@
-import { UserToAuthenticate } from "../types/types";
+import { UserToAuthenticateStateType } from "../types/types";
 
 export const validateToAuthenticateUser = (
-  user: UserToAuthenticate
+  user: UserToAuthenticateStateType
 ): boolean => {
   return (
     !!user.email &&

@@ -1,12 +1,12 @@
 import { PropsWithChildren, useState } from "react";
 import "../../assets/style/perPage/auth.scss";
 import { Link } from "react-router-dom";
-import { UserToAuthenticate } from "../../types/types";
+import { UserToAuthenticateStateType } from "../../types/types";
 
 interface Props {
   title: string;
   switchTo: "login" | "signup";
-  handleSubmit: (user: UserToAuthenticate) => void;
+  handleSubmit: (user: UserToAuthenticateStateType) => void;
 }
 
 const AuthParent = ({
@@ -14,7 +14,7 @@ const AuthParent = ({
   switchTo,
   handleSubmit,
 }: PropsWithChildren<Props>) => {
-  const [user, setUser] = useState<UserToAuthenticate>({
+  const [user, setUser] = useState<UserToAuthenticateStateType>({
     email: "",
     password: "",
   });
@@ -61,9 +61,6 @@ const AuthParent = ({
               ? "I already have an account"
               : "I  have no account"}
           </Link>
-          <button type="button" className="o__auth">
-            Use Google to authenticate
-          </button>
         </div>
       </div>
     </main>
