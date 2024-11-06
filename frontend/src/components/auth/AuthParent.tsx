@@ -2,20 +2,23 @@ import { PropsWithChildren, useState } from "react";
 import "../../assets/style/perPage/auth.scss";
 import { Link } from "react-router-dom";
 import { UserToAuthenticateStateType } from "../../types/types";
+import Loader from "../cross-app/Loader";
 
 interface Props {
   title: string;
   switchTo: "login" | "signup";
   handleSubmit: (user: UserToAuthenticateStateType) => void;
+  pending?: boolean;
 }
 
 const AuthParent = ({
   title,
   switchTo,
   handleSubmit,
+  pending,
 }: PropsWithChildren<Props>) => {
   const [user, setUser] = useState<UserToAuthenticateStateType>({
-    email: "",
+    name: "",
     password: "",
   });
 
@@ -26,13 +29,13 @@ const AuthParent = ({
 
         <div className="inputs">
           <div className="wrap__input">
-            <label htmlFor="email">E-mail address</label>
+            <label htmlFor="name">Username</label>
             <input
-              type="email"
-              placeholder="ex : user@gmail.com"
-              value={user.email}
+              type="text"
+              placeholder="ex : Nzanzu Lwanzo"
+              value={user.name}
               onChange={(e) =>
-                setUser((prev) => ({ ...prev, email: e.target.value }))
+                setUser((prev) => ({ ...prev, name: e.target.value }))
               }
             />
           </div>
@@ -54,7 +57,7 @@ const AuthParent = ({
               handleSubmit(user);
             }}
           >
-            Submit
+            {pending ? <Loader height={23} width={23} /> : "Submit"}
           </button>
           <Link to={`/auth/${switchTo}`} className="switcher">
             {switchTo === "login"

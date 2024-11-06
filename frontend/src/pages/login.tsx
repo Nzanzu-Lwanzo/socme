@@ -11,7 +11,6 @@ const Login = () => {
       if (!validateToAuthenticateUser(user)) {
         throw new Error("INVALID_DATA_ERROR");
       }
-     
 
       navigateTo("/");
     } catch (e) {

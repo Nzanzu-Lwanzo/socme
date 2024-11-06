@@ -1,4 +1,5 @@
 import User from "../db/models/user.mjs";
+import {} from "express-session";
 
 export const subscribeToPushNotifications = (req, res) => {
   const { subscription } = req.body;
@@ -23,6 +24,11 @@ export const createAccount = async (req, res) => {
   console.log(req.body);
   try {
     const account = await User.create(req.body);
+    req.session.user = {
+      _id: account._id,
+      name: account.name,
+      picture: account.picture,
+    };
     res.status(201).json(account);
   } catch (e) {
     res.sendStatus(500);

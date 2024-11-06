@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { generatePassword } from "../../auth/utils/passwordHandlers.mjs";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -6,9 +7,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "You must provide a username !"],
     },
-    email: {
+    password: {
       type: String,
-      required: [true, "You must provide an email !"],
+      set: function (password) {
+        return generatePassword(password);
+      },
     },
     picture: {
       type: String,

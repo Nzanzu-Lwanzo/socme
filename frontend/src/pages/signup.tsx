@@ -1,10 +1,11 @@
+import { enqueueSnackbar } from "notistack";
 import AuthParent from "../components/auth/AuthParent";
+import { useCreateAccount } from "../hooks/useAuthenticate";
 import { UserToAuthenticateStateType } from "../types/types";
 import { validateToAuthenticateUser } from "../utils/validators";
-import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const navigateTo = useNavigate();
+  const { mutate, isPending } = useCreateAccount();
 
   const handleSubmit = async (user: UserToAuthenticateStateType) => {
     try {
@@ -12,14 +13,13 @@ const Signup = () => {
         throw new Error("INVALID_DATA_ERROR");
       }
 
-      // Save the account data in a state
-
-      navigateTo("/");
+      // Request the server to create the account
+      mutate(user);
+      
     } catch (e) {
       switch ((e as Error).message) {
         case "INVALID_DATA_ERROR": {
-          // Do something
-          // The user didn't provide any credentials
+          enqueueSnackbar("Données incomplètes ou invalides fournies !");
           break;
         }
 
@@ -34,6 +34,7 @@ const Signup = () => {
       handleSubmit={handleSubmit}
       switchTo="login"
       title="Create an account"
+      pending={isPending}
     ></AuthParent>
   );
 };

@@ -1,4 +1,4 @@
 export type UserToAuthenticateStateType = {
-  email: string;
+  name: string;
   password: string;
 };
