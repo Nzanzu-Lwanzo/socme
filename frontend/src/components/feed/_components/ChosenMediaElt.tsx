@@ -14,7 +14,7 @@ const ImageChosen = ({
   file: MediaFileType;
   isPlaceholder?: boolean;
   remainingFiles?: number;
-  removeFile: (id: string) => void;
+  removeFile?: (id: string) => void;
 }) => {
   const [url, setUrl] = useState<string | ArrayBuffer | null>(null);
 
@@ -42,7 +42,11 @@ const ImageChosen = ({
           <button
             type="button"
             className="remove__media"
-            onClick={() => removeFile(file.id)}
+            onClick={() => {
+              if (removeFile) {
+                removeFile(file.id);
+              }
+            }}
           >
             <XCircle stroke={COLOR_SCHEMA.white} size={20} />
           </button>

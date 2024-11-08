@@ -1,5 +1,9 @@
 import User from "../db/models/user.mjs";
-import {} from "express-session";
+import {
+  manuallyValidateName,
+  manuallyValidatePassword,
+} from "../utils/userValidation.mjs";
+import dpx, { getFilepath } from "../utils/dropbox.setup.mjs";
 
 export const subscribeToPushNotifications = (req, res) => {
   const { subscription } = req.body;
@@ -21,7 +25,6 @@ export const subscribeToPushNotifications = (req, res) => {
 };
 
 export const createAccount = async (req, res) => {
-  console.log(req.body);
   try {
     const account = await User.create(req.body);
     req.session.user = {
@@ -31,6 +34,7 @@ export const createAccount = async (req, res) => {
     };
     res.status(201).json(account);
   } catch (e) {
+    console.log(e);
     res.sendStatus(500);
   }
 };
@@ -46,9 +50,82 @@ export const getAccount = async (req, res) => {
 
 export const logUserIn = async (req, res) => {
   try {
-    console.log(req.session);
-    res.sendStatus(200).json({});
+    res.status(200).json(req.user);
   } catch (e) {
+    res.sendStatus(500);
+  }
+};
+
+/**
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+export const logUserOut = async (req, res) => {
+  try {
+    req.logout({ keepSessionInfo: false }, (err) => {
+      if (err) {
+        throw new Error("LOGIN_FAILED");
+      }
+    });
+    res.sendStatus(204);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+};
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { name, password } = req.body;
+
+    if (!manuallyValidateName(name))
+      return res.status(406).json({ error: "INVALID_USERNAME" });
+    if (!manuallyValidatePassword(password))
+      return res.status(406).json({ error: "INVALID_PASSWORD" });
+
+    let fileUrl;
+
+    if (req.file) {
+      // Save in the dropbox folder - Cloud
+      const fileUploaded = await dpx.filesUpload({
+        path: getFilepath(req.file),
+        contents: req.file.buffer,
+      });
+
+      if (fileUploaded.status > 400) {
+        throw new Error("IMAGE_FILE_NO_UPLOADED");
+      }
+
+      const sharedLink = await dpx.sharingCreateSharedLinkWithSettings({
+        path: fileUploaded.result.path_display,
+      });
+
+      // This is the URL that allows me to access
+      // the image over the network.
+      // So, it's the one I'll store in the database
+      // along with my user profile
+      fileUrl = sharedLink.result.url.replace("?dl=0", "?raw=1");
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: {
+          ...req.body,
+          picture: req.file ? fileUrl : undefined,
+        },
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (e) {
+    if (e.name === "FetchError" && e.message.includes("dropbox")) {
+      res.sendStatus(400);
+      return;
+    }
+
     res.sendStatus(500);
   }
 };

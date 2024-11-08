@@ -11,6 +11,7 @@ import commentRouter from "./backend/routes/comment.mjs";
 import webpush from "web-push";
 import cors from "cors";
 import session from "express-session";
+import passport from "passport";
 
 // VARIABLES AND CONSTANTS
 const App = express();
@@ -24,6 +25,7 @@ const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const ALLOWED_ORIGINS_WHITELIST = [
   "http://localhost:5173",
+  "http://localhost:5000",
   "https://socme.onheroku.com",
   "https://socme.onrender.com",
   "https://socme.netlify.com",
@@ -52,10 +54,12 @@ App.use(
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: ENV !== "dev",
       secure: ENV !== "dev",
-      sameSite: ENV !== "dev" && "none",
+      sameSite: ENV !== "dev" ? "none" : "lax",
     },
   })
 );
+App.use(passport.initialize());
+App.use(passport.session());
 
 // ROUTES
 App.use("/api/comment", commentRouter);

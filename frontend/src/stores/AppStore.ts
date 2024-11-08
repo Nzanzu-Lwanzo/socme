@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { User } from "../types/interfaces";
+import { lsRead } from "../db/ls.io";
 
 export type ModalSectionType = "SETTINGS" | "PROFILE" | null;
 
@@ -9,12 +10,12 @@ interface State {
 }
 
 interface Actions {
-  setAuth: (user: User) => void;
+  setAuth: (user: State["auth"]) => void;
   setModal: (section: State["modalSection"]) => void;
 }
 
 const useAppStore = create<State & Actions>()((set) => ({
-  auth: undefined,
+  auth: lsRead<User>("socme-auth"),
   setAuth(user) {
     set((state) => ({ ...state, auth: user }));
   },

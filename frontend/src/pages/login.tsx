@@ -1,23 +1,24 @@
 import AuthParent from "../components/auth/AuthParent";
-import { UserToAuthenticateStateType } from "../types/types";
+import { useLogUserIn } from "../hooks/userHooks";
+import { StateUserType } from "../types/types";
 import { validateToAuthenticateUser } from "../utils/validators";
-import { useNavigate } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
 
 const Login = () => {
-  const navigateTo = useNavigate();
+  const { isPending, mutate } = useLogUserIn();
 
-  const handleSubmit = async (user: UserToAuthenticateStateType) => {
+  const handleSubmit = async (user: StateUserType) => {
     try {
       if (!validateToAuthenticateUser(user)) {
         throw new Error("INVALID_DATA_ERROR");
       }
 
-      navigateTo("/");
+      // Request the server to authenticate the user
+      mutate(user);
     } catch (e) {
       switch ((e as Error).message) {
         case "INVALID_DATA_ERROR": {
-          // Do something
-          // The user didn't provide any credentials
+          enqueueSnackbar("Données incomplètes ou invalides fournies !");
           break;
         }
 
@@ -28,9 +29,10 @@ const Login = () => {
   };
   return (
     <AuthParent
-      handleSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       switchTo="signup"
       title="Log In"
+      pending={isPending}
     ></AuthParent>
   );
 };

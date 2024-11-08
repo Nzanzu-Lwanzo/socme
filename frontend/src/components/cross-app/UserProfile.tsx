@@ -1,14 +1,19 @@
+import useAppStore from "../../stores/AppStore";
+import Avatar from "boring-avatars";
 
 const UserProfile = () => {
+  const auth = useAppStore((state) => state.auth);
+
   return (
     <div className="profile">
-      <img
-        src="https://media.gettyimages.com/id/1438969575/photo/smiling-young-male-college-student-wearing-headphones-standing-in-a-classroom.jpg?s=612x612&w=0&k=20&c=yNawJP9JGXU6LOL262ME5M1U2xxNKQsvT7F9DZhZCh4="
-        alt="user"
-        className="user__image"
-      />
+      {auth?.picture ? (
+        <img src={auth.picture} alt={auth.name} className="user__image" />
+      ) : (
+        <Avatar size={30}  name={auth?.name} />
+      )}
+
       <div className="about__feed">
-        <span className="user__name">Nzanzu Lwanzo</span>
+        <span className="user__name">{auth?.name}</span>
       </div>
     </div>
   );

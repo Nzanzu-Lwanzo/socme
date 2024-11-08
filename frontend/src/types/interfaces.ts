@@ -1,8 +1,7 @@
 export interface User {
   _id: string;
-  email: string | null;
-  picture: string | null;
-  name: string | null;
+  picture: string;
+  name: string;
   createdAt: string;
   updatedAt: string;
   _v: number;

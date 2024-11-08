@@ -28,7 +28,7 @@ const client = new QueryClient({
 });
 
 function App() {
-  const auth = useAppStore((state) => state.auth) || true;
+  const { auth } = useAppStore();
 
   return (
     <QueryClientProvider client={client}>

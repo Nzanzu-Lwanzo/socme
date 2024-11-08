@@ -21,3 +21,10 @@ const MAP_ENV_ORIGIN = {
 };
 
 export const BASE_URL = MAP_ENV_ORIGIN[ENV] + "/api";
+
+// For form validation
+export let nameMaxLength = 32;
+export let nameMinLength = 6;
+
+export let passwordMaxLength = 16;
+export let passwordMinLength = 6;
