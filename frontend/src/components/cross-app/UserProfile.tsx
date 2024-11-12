@@ -2,7 +2,7 @@ import useAppStore from "../../stores/AppStore";
 import Avatar from "boring-avatars";
 import { PopulateUserType } from "../../types/interfaces";
 
-const UserProfile = ({ user }: { user: PopulateUserType }) => {
+const UserProfile = ({ user }: { user?: PopulateUserType }) => {
   const auth = user || useAppStore((state) => state.auth);
 
   return (
