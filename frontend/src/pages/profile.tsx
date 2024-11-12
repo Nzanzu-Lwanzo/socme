@@ -136,7 +136,10 @@ const Profile = () => {
           <div className="preview__image center">
             {auth?.picture && !file ? (
               <>
-                <img src={auth.picture} alt={`Profile image of ${auth.name}`} />
+                <img
+                  src={auth.picture as string}
+                  alt={`Profile image of ${auth.name}`}
+                />
                 <ImageSelectorButton selectImage={selectImage} />
               </>
             ) : (
