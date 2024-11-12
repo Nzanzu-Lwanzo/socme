@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema(
     },
     picture: {
       type: String,
+      default: undefined,
     },
     pushSubscription: {
       endpoint: String,
@@ -34,6 +35,7 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    minimize: false,
   }
 );
 

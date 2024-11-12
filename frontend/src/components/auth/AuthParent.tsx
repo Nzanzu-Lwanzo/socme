@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import "../../assets/style/perPage/auth.scss";
 import { Link } from "react-router-dom";
-import { StateUserType } from "../../types/types";
+import { StateUserType } from "../../types/interfaces";
 import Loader from "../cross-app/Loader";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

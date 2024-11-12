@@ -2,38 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import Axios, { AxiosError } from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
-import { type StateUserType } from "../types/types";
+import { type StateUserType } from "../types/interfaces";
 import useAppStore from "../stores/AppStore";
 import { enqueueSnackbar } from "notistack";
 import { lsWrite } from "../db/ls.io";
 import { type User } from "../types/interfaces";
 import { useState } from "react";
-
-const handleErrors = (error: AxiosError, defaultHandler?: () => void) => {
-  switch (error.status) {
-    case 400:
-      enqueueSnackbar("Request failed, check you network !");
-      break;
-
-    case 404:
-      enqueueSnackbar("404 : ressource not found !");
-      break;
-
-    case 406:
-      enqueueSnackbar("Incomplete or invalid data !");
-      break;
-
-    case 500:
-      enqueueSnackbar("Internal error : call the developer !");
-      break;
-    default:
-      if (defaultHandler && typeof defaultHandler === "function") {
-        defaultHandler();
-      }
-      console.log(error.message);
-      break;
-  }
-};
+import { handleErrors } from "../utils/handlersAndFormatters";
 
 export const useCreateAccount = () => {
   const navigateTo = useNavigate();
@@ -62,7 +37,9 @@ export const useLogUserIn = () => {
     mutationKey: ["user", "auth"],
     mutationFn: async (data: StateUserType) => {
       try {
-        const response = await Axios.post(BASE_URL.concat("/user/auth"), data);
+        const response = await Axios.post(BASE_URL.concat("/user/auth"), data, {
+          withCredentials: true,
+        });
         if (response.status < 400) {
           // Store the current authenticated user in a state
           setAuth(response.data as User);
@@ -100,7 +77,9 @@ export const useUpdateUserProfile = () => {
           },
         });
 
-        console.log(data);
+        console.log(response.data);
+
+        lsWrite("socme-auth", response.data);
 
         if (response.status === 200) {
           setAuth(response.data as User);

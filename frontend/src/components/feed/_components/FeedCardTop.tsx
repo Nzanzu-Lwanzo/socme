@@ -1,12 +1,24 @@
 import { COLOR_SCHEMA } from "../../../utils/constants";
 import { Ellipsis, X, Bell } from "lucide-react";
 import UserProfile from "../../cross-app/UserProfile";
+import { PopulateUserType } from "../../../types/interfaces";
 
-const FeedCardTop = () => {
+const FeedCardTop = ({
+  _id,
+  textContent,
+  author,
+}: {
+  _id: string;
+  textContent: string;
+  author: PopulateUserType;
+}) => {
+  // Use the ID for further mutations
+  console.log(_id);
+
   return (
     <div className="feed__card__top">
       <div className="user__and__actions">
-        <UserProfile />
+        <UserProfile user={author} />
         <div className="actions">
           <button type="button" className="action">
             <Bell size={20} stroke={COLOR_SCHEMA.black} />
@@ -20,12 +32,7 @@ const FeedCardTop = () => {
         </div>
       </div>
       <div className="feed__description">
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum
-          laborum saepe dolores cumque quos ad modi corrupti animi iste. Labore
-          maxime laborum ullam, obcaecati sit accusamus dolore pariatur
-          distinctio dignissimos?
-        </p>
+        <p>{textContent}</p>
       </div>
     </div>
   );

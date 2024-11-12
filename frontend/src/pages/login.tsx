@@ -1,6 +1,6 @@
 import AuthParent from "../components/auth/AuthParent";
 import { useLogUserIn } from "../hooks/userHooks";
-import { StateUserType } from "../types/types";
+import { StateUserType } from "../types/interfaces";
 import { validateToAuthenticateUser } from "../utils/validators";
 import { enqueueSnackbar } from "notistack";
 

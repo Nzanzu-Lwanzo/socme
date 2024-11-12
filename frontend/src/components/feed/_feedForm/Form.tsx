@@ -3,13 +3,25 @@ import { Newspaper, Calendar } from "lucide-react";
 import SelectMedias from "./SelectMedias";
 import useFeedFormStore from "../../../stores/FeedFormStore";
 import ListMedias from "../_components/ListMedias";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+import { usePostAPost } from "../../../hooks/postHooks";
+import Loader from "../../cross-app/Loader";
 
 const Form = () => {
   const files = useFeedFormStore((state) => state.files);
+  const [textContent, setTextContent] = useState("");
+  const { isPending, mutate } = usePostAPost();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const post = new FormData();
+
+    post.append("textContent", textContent);
+    files.forEach((file) => {
+      post.append("mediaFiles", file.data);
+    });
+
+    mutate(post);
   };
 
   return (
@@ -25,6 +37,8 @@ const Form = () => {
           name="description"
           id="description"
           placeholder="Hey Nzanzu Lwanzo, what's on your mind today ?"
+          value={textContent}
+          onChange={(event) => setTextContent(event.target.value)}
         ></textarea>
       </div>
 
@@ -37,10 +51,16 @@ const Form = () => {
       </div>
       <div className="submitters">
         <button type="submit" className="post__a__feed">
-          <span>Post a feed</span>
-          <span className="icon">
-            <Newspaper size={20} />
-          </span>
+          {isPending ? (
+            <Loader height={20} width={20} />
+          ) : (
+            <>
+              <span>Post a feed</span>
+              <span className="icon">
+                <Newspaper size={20} />
+              </span>
+            </>
+          )}
         </button>
         <button type="button" className="post__a__feed">
           <span>Plan a post</span>

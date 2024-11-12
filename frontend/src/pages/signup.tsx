@@ -1,7 +1,7 @@
 import { enqueueSnackbar } from "notistack";
 import AuthParent from "../components/auth/AuthParent";
 import { useCreateAccount } from "../hooks/userHooks";
-import { StateUserType } from "../types/types";
+import { StateUserType } from "../types/interfaces";
 import { validateToAuthenticateUser } from "../utils/validators";
 
 const Signup = () => {

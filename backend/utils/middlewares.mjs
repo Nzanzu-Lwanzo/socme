@@ -10,3 +10,10 @@ export const validateReqBody = (req, res, next) => {
 
   next();
 };
+
+export const validateSession = (req, res, next) => {
+  if (!req.signedCookies["connect.sid"]) {
+    return res.sendStatus(401);
+  }
+  next();
+};

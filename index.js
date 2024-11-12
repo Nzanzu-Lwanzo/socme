@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-import dbConnect from "./backend/db/connectToDb.mjs";
+import dbConnect, { dbName } from "./backend/db/connectToDb.mjs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import postRouter from "./backend/routes/post.mjs";
@@ -12,6 +12,8 @@ import webpush from "web-push";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
+import MongoStore from "connect-mongo";
+import cookieParser from "cookie-parser";
 
 // VARIABLES AND CONSTANTS
 const App = express();
@@ -34,6 +36,7 @@ const ALLOWED_METHODS_WHITELIST = ["GET", "POST", "PATCH", "DELETE"];
 
 // MIDDLEWARES
 App.use(express.json());
+App.use(cookieParser(SECRET));
 App.use(express.static(join(__dirname, PATH_TO_PAGE)));
 App.use(
   cors({
@@ -42,14 +45,22 @@ App.use(
     credentials: true,
   })
 );
+
 if (ENV !== "dev") {
   App.set("trust proxy", 1);
 }
+
 App.use(
   session({
     secret: SECRET,
     saveUninitialized: false,
     resave: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      dbName: dbName,
+      ttl: 30 * 24 * 60 * 60,
+      touchAfter: 24 * 3600,
+    }),
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: ENV !== "dev",

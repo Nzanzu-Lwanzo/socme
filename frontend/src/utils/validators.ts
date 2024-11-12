@@ -1,4 +1,4 @@
-import { StateUserType } from "../types/types";
+import { StateUserType } from "../types/interfaces";
 
 export const validateToAuthenticateUser = (user: StateUserType): boolean => {
   return (

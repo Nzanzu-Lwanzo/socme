@@ -1,6 +1,15 @@
+import { Comment } from "../../../types/interfaces";
 import CommentElt from "./CommentElt";
 
-const Comments = ({ expand }: { expand: boolean }) => {
+const Comments = ({
+  expand,
+  comments,
+}: {
+  expand: boolean;
+  comments: Comment[];
+}) => {
+  // Display comments and manage mutations
+  console.log(comments);
   return (
     <div className={`comments ${expand ? "expand" : null}`}>
       <div className="timeline">

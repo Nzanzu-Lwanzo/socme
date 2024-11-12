@@ -38,6 +38,7 @@ $sectionsHeight: calc(100vh - $header__height);
     .images {
       max-width: 100%;
       position: relative;
+      min-height: 150px;
 
       &.many {
         display: grid;

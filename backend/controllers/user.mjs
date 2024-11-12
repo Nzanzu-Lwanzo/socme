@@ -3,7 +3,8 @@ import {
   manuallyValidateName,
   manuallyValidatePassword,
 } from "../utils/userValidation.mjs";
-import dpx, { getFilepath } from "../utils/dropbox.setup.mjs";
+import { v2 as cloudinary } from "cloudinary";
+import "../utils/cloudinary.setup.mjs";
 
 export const subscribeToPushNotifications = (req, res) => {
   const { subscription } = req.body;
@@ -87,25 +88,18 @@ export const updateUserProfile = async (req, res) => {
     let fileUrl;
 
     if (req.file) {
-      // Save in the dropbox folder - Cloud
-      const fileUploaded = await dpx.filesUpload({
-        path: getFilepath(req.file),
-        contents: req.file.buffer,
-      });
+      try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          public_id: "image",
+        });
 
-      if (fileUploaded.status > 400) {
-        throw new Error("IMAGE_FILE_NO_UPLOADED");
+        console.log(result);
+
+        fileUrl = result.url;
+      } catch (e) {
+        console.log(e);
+        fileUrl = undefined;
       }
-
-      const sharedLink = await dpx.sharingCreateSharedLinkWithSettings({
-        path: fileUploaded.result.path_display,
-      });
-
-      // This is the URL that allows me to access
-      // the image over the network.
-      // So, it's the one I'll store in the database
-      // along with my user profile
-      fileUrl = sharedLink.result.url.replace("?dl=0", "?raw=1");
     }
 
     const user = await User.findByIdAndUpdate(
@@ -121,6 +115,7 @@ export const updateUserProfile = async (req, res) => {
 
     res.json(user);
   } catch (e) {
+    console.log(e);
     if (e.name === "FetchError" && e.message.includes("dropbox")) {
       res.sendStatus(400);
       return;

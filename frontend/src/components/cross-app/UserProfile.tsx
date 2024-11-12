@@ -1,15 +1,20 @@
 import useAppStore from "../../stores/AppStore";
 import Avatar from "boring-avatars";
+import { PopulateUserType } from "../../types/interfaces";
 
-const UserProfile = () => {
-  const auth = useAppStore((state) => state.auth);
+const UserProfile = ({ user }: { user: PopulateUserType }) => {
+  const auth = user || useAppStore((state) => state.auth);
 
   return (
     <div className="profile">
       {auth?.picture ? (
-        <img src={auth.picture} alt={auth.name} className="user__image" />
+        <img
+          src={auth?.picture as string}
+          alt={auth.name}
+          className="user__image"
+        />
       ) : (
-        <Avatar size={30}  name={auth?.name} />
+        <Avatar size={30} name={auth?.name} />
       )}
 
       <div className="about__feed">

@@ -19,7 +19,7 @@ import {
   passwordMinLength,
 } from "../utils/constants";
 import { useUpdateUserProfile } from "../hooks/userHooks";
-import { StateUserType } from "../types/types";
+import { StateUserType } from "../types/interfaces";
 import useAppStore from "../stores/AppStore";
 
 const DisplayImage = ({
@@ -134,7 +134,7 @@ const Profile = () => {
             />
           </div>
           <div className="preview__image center">
-            {auth?.picture ? (
+            {auth?.picture && !file ? (
               <>
                 <img src={auth.picture} alt={`Profile image of ${auth.name}`} />
                 <ImageSelectorButton selectImage={selectImage} />
