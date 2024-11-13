@@ -16,7 +16,7 @@ export const PUSH_PUBLIC_KEY =
 const ENV: "prod" | "dev" = "prod";
 
 const MAP_ENV_ORIGIN = {
-  prod: "https://socme.onheroku.com",
+  prod: document.location.origin,
   dev: "http://localhost:5000",
 };
 
