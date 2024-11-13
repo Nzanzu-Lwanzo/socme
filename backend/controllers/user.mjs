@@ -5,6 +5,7 @@ import {
 } from "../utils/userValidation.mjs";
 import { v2 as cloudinary } from "cloudinary";
 import "../utils/cloudinary.setup.mjs";
+import { nanoid } from "nanoid";
 
 export const subscribeToPushNotifications = (req, res) => {
   const { subscription } = req.body;
@@ -78,27 +79,39 @@ export const logUserOut = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, password, old_picture_public_id } = req.body;
 
     if (!manuallyValidateName(name))
       return res.status(406).json({ error: "INVALID_USERNAME" });
     if (!manuallyValidatePassword(password))
       return res.status(406).json({ error: "INVALID_PASSWORD" });
 
-    let fileUrl;
+    let pictureImageData;
 
     if (req.file) {
+      // Delete the the ancient profile picture
+      await cloudinary.uploader.destroy(old_picture_public_id, {
+        invalidate: true,
+        type: "upload",
+        resource_type: "image",
+      });
+
+      // Upload the new profile picture
+      const public_id = nanoid();
       try {
         const result = await cloudinary.uploader.upload(req.file.path, {
-          public_id: "image",
+          public_id: public_id,
+          type: "upload",
+          resource_type: "image",
         });
 
-        console.log(result);
-
-        fileUrl = result.url;
+        pictureImageData = {
+          url: result.url,
+          public_id,
+        };
       } catch (e) {
         console.log(e);
-        fileUrl = undefined;
+        pictureImageData = undefined;
       }
     }
 
@@ -107,7 +120,7 @@ export const updateUserProfile = async (req, res) => {
       {
         $set: {
           ...req.body,
-          picture: req.file ? fileUrl : undefined,
+          picture: req.file ? pictureImageData : undefined,
         },
       },
       { new: true }

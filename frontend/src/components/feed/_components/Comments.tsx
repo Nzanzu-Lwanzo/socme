@@ -9,19 +9,16 @@ const Comments = ({
   comments: Comment[];
 }) => {
   // Display comments and manage mutations
-  console.log(comments);
   return (
     <div className={`comments ${expand ? "expand" : null}`}>
       <div className="timeline">
-        <div className="container">
-          <CommentElt />
-        </div>
-        <div className="container">
-          <CommentElt />
-        </div>
-        <div className="container">
-          <CommentElt />
-        </div>
+        {comments.map((comment) => {
+          return (
+            <div className="container">
+              <CommentElt comment={comment} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

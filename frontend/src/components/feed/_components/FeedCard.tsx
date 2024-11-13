@@ -3,11 +3,17 @@ import FeedCardTop from "./FeedCardTop";
 import Comments from "./Comments";
 import { useState } from "react";
 import FeedImages from "../../cross-app/FeedImages";
-import { PopulateUserType, type Post } from "../../../types/interfaces";
+import {
+  PopulateUserType,
+  PostMediaFileType,
+  type Post,
+} from "../../../types/interfaces";
+import useAppStore from "../../../stores/AppStore";
 
 const FeedCard = ({ post }: { post: Post }) => {
   const [expandCommentsTab, setExpandCommentsTab] = useState(false);
-  const author = post.author;
+  const author = post.author as PopulateUserType;
+  const auth = useAppStore((state) => state.auth);
 
   const expandTab = () => {
     setExpandCommentsTab((prev) => !prev);
@@ -16,19 +22,26 @@ const FeedCard = ({ post }: { post: Post }) => {
   return (
     <div className="feed">
       <FeedCardTop
-        author={author as PopulateUserType}
+        author={author}
         _id={post._id}
         textContent={post.textContent}
+        postDate={post.createdAt}
       />
-      <FeedImages images={post.mediaFiles as string[]} />
+      <FeedImages
+        images={(post.mediaFiles as PostMediaFileType[]).map(
+          (mediaFile) => mediaFile.url
+        )}
+      />
       <div className="bottom">
         <UserActionsOnFeed
+          isAuthor={author._id === auth?._id}
           postId={post._id}
           dislikes={post.dislikes.length}
           likes={post.likes.length}
           seen={post.seen.length}
           comments={post.comments.length}
           onReplyIconClick={expandTab}
+          countMediaFiles={post.mediaFiles.length}
         />
         <Comments comments={post.comments || []} expand={expandCommentsTab} />
       </div>

@@ -1,8 +1,8 @@
-import { populate } from "dotenv";
 import Post from "../db/models/post.mjs";
 import "../utils/cloudinary.setup.mjs";
 import { v2 as cloudinary } from "cloudinary";
 import { isValidObjectId } from "mongoose";
+import { nanoid } from "nanoid";
 
 export const saveAPost = async (req, res) => {
   try {
@@ -14,28 +14,56 @@ export const saveAPost = async (req, res) => {
     if (files) {
       for (let file of files) {
         try {
+          // We'll need this unique identifier later
+          // when we need to delete the asset (image, video)
+          // from our cloudinary
+          let public_id = nanoid();
+
           const result = await cloudinary.uploader.upload(file.path, {
-            public_id: "post_media_file",
+            public_id: public_id,
+            type: "upload",
+            resource_type: "image",
           });
-          postMediaFiles.push(result.url);
+          postMediaFiles.push({
+            url: result.url,
+            public_id,
+          });
         } catch (e) {}
       }
     }
 
-    const post = await Post.create({
+    // Optimize this *******************************************
+    // The goal is to create a post and get directly the "author" path
+    // populated. We need that data on the frontend
+    const post = new Post({
       textContent,
       mediaFiles: postMediaFiles.length >= 1 ? postMediaFiles : undefined,
       author: req.user._id,
     });
 
-    res.status(201).json(post);
+    await post.save();
+
+    const createdPost = await Post.findById(
+      post._id,
+      {},
+      {
+        populate: {
+          path: "author",
+          select: "_id name picture",
+        },
+      }
+    );
+
+    // *******************************************************
+
+    res.status(201).json(createdPost);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
 };
 
-export const getAllPosts = async (req, res) => {
+export const getPosts = async (req, res) => {
   try {
     const posts = await Post.find(
       {},
@@ -45,6 +73,7 @@ export const getAllPosts = async (req, res) => {
           path: "author",
           select: "_id name picture",
         },
+        sort: "-createdAt -updatedAt",
       }
     );
     res.json(posts);
@@ -112,4 +141,31 @@ export const dislikePost = async (req, res) => {
     console.log(e);
     res.sendStatus(500);
   }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    let { id } = req.params;
+
+    // Delete the post
+    const deletedPost = await Post.findOneAndDelete(
+      { _id: id, author: req.user._id },
+      { new: true }
+    );
+
+    // Return a response to the client
+    res.sendStatus(204);
+
+    // Delete the media files related to this post from the cloudinary
+    try {
+      const mediaFiles = deletedPost.mediaFiles;
+      const publid_ids = mediaFiles.map((file) => file.public_id);
+
+      cloudinary.api.delete_resources(publid_ids, {
+        resource_type: "image",
+        invalidate: true,
+        type: "upload",
+      });
+    } catch (e) {}
+  } catch (e) {}
 };

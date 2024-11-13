@@ -13,7 +13,12 @@ const PostSchema = new mongoose.Schema(
     },
 
     mediaFiles: {
-      type: [String],
+      type: [
+        {
+          url: String,
+          public_id: String,
+        },
+      ],
       validate: function () {
         // if no textContent and no mediaFile, then return an error
         if (!this.mediaFiles && !this.textContent) {

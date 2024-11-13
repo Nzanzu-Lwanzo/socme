@@ -17,6 +17,7 @@ interface Actions {
   addPost: (post: Post) => void;
   addPosts: (posts: Post[]) => void;
   updatePosts: (post: Post) => void;
+  deletePost: (id: string) => void;
 }
 
 const useAppStore = create<State & Actions>()((set) => ({
@@ -50,6 +51,13 @@ const useAppStore = create<State & Actions>()((set) => ({
       statePosts.splice(idx, 1, post);
 
       return { ...state, posts: statePosts };
+    });
+  },
+
+  // Must be used with a transition
+  deletePost(id) {
+    set((state) => {
+      return { ...state, posts: state.posts.filter((post) => post._id !== id) };
     });
   },
 }));

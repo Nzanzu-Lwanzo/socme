@@ -22,6 +22,10 @@ const MAP_ENV_ORIGIN = {
 
 export const BASE_URL = MAP_ENV_ORIGIN[ENV] + "/api";
 
+// This value must be the same as the limit value used in the database request.
+// See "countPostsToFetch" variable in "getPosts" controller
+export const postCountListAndSkip = 2;
+
 // For form validation
 export let nameMaxLength = 32;
 export let nameMinLength = 6;

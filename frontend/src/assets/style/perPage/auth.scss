@@ -67,3 +67,23 @@
     }
   }
 }
+
+// MEDIA QUERIES
+@media only all and (max-width:600px) {
+  .auth__page .auth__card {
+    width: 90%;
+  }
+
+  .form__container .inputs {
+    padding-inline: 0;
+  }
+
+  .auth__page .auth__card .switcher {
+    font-size: .7rem;
+  }
+
+  button,
+  input {
+    font-size: .8rem !important;
+  }
+}

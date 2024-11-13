@@ -19,7 +19,7 @@ import {
   passwordMinLength,
 } from "../utils/constants";
 import { useUpdateUserProfile } from "../hooks/userHooks";
-import { StateUserType } from "../types/interfaces";
+import { StateUserType, UserPictureType } from "../types/interfaces";
 import useAppStore from "../stores/AppStore";
 
 const DisplayImage = ({
@@ -100,7 +100,10 @@ const Profile = () => {
     }
 
     // Send to the backend
-    mutate(profile);
+    mutate({
+      ...profile,
+      old_picture_public_id: (auth?.picture as UserPictureType)?.public_id,
+    });
   };
 
   return (
@@ -137,7 +140,7 @@ const Profile = () => {
             {auth?.picture && !file ? (
               <>
                 <img
-                  src={auth.picture as string}
+                  src={(auth.picture as UserPictureType).url as string}
                   alt={`Profile image of ${auth.name}`}
                 />
                 <ImageSelectorButton selectImage={selectImage} />

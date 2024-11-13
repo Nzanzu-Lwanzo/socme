@@ -68,7 +68,9 @@ export const useUpdateUserProfile = () => {
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["user", "profile"],
-    mutationFn: async (data: Partial<StateUserType>) => {
+    mutationFn: async (
+      data: Partial<StateUserType & { old_picture_public_id :string}>
+    ) => {
       try {
         const response = await Axios.patch(BASE_URL.concat("/user"), data, {
           withCredentials: true,
@@ -76,8 +78,6 @@ export const useUpdateUserProfile = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-
-        console.log(response.data);
 
         lsWrite("socme-auth", response.data);
 

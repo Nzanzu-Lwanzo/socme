@@ -22,7 +22,10 @@ const UserSchema = new mongoose.Schema(
       },
     },
     picture: {
-      type: String,
+      type: {
+        url: String,
+        public_id: String,
+      },
       default: undefined,
     },
     pushSubscription: {

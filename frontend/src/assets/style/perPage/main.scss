@@ -70,6 +70,10 @@ $sectionsHeight: calc(100vh - $header__height);
             align-items: flex-start;
             gap: 0.2rem;
             flex-direction: column;
+
+            .date {
+              font-size: .7rem;
+            }
           }
         }
 
@@ -102,6 +106,10 @@ $sectionsHeight: calc(100vh - $header__height);
     .feed__description {
       padding: 1rem 0.5rem;
       font-size: 0.9rem;
+
+      p {
+        @include clamp($lines:3);
+      }
     }
 
     .bottom {

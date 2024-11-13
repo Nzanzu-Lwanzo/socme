@@ -4,10 +4,10 @@ import Axios, { AxiosError } from "axios";
 import useAppStore from "../stores/AppStore";
 import { handleErrors } from "../utils/handlersAndFormatters";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { enqueueSnackbar } from "notistack";
 
-export const usePostAPost = () => {
+export const usePostAPost = (onSucces: () => void) => {
   const addPost = useAppStore((state) => state.addPost);
   const navigateTo = useNavigate();
   const { mutate, isPending } = useMutation({
@@ -23,6 +23,7 @@ export const usePostAPost = () => {
 
         if (response.status === 201) {
           addPost(response.data);
+          onSucces(); // The main purpose of this function it's to reinitialize the state of the post form
           navigateTo("/");
         }
 
@@ -36,19 +37,20 @@ export const usePostAPost = () => {
   return { mutate, isPending };
 };
 
-export const useGetAllPosts = () => {
-  const addPosts = useAppStore((state) => state.addPosts);
+export const useGetPosts = () => {
+  const { addPosts } = useAppStore();
+  const [on_fetch_posts_transition, startTransition] = useTransition();
 
   const { isFetching, isError, isSuccess } = useQuery({
     queryKey: ["post"],
     queryFn: async () => {
       try {
-        const response = await Axios.get(BASE_URL.concat("/post"), {
+        const response = await Axios.get(BASE_URL.concat(`/post`), {
           withCredentials: true,
         });
 
         if (response.status < 400) {
-          addPosts(response.data);
+          startTransition(() => addPosts(response.data));
         }
 
         return response.data;
@@ -58,17 +60,19 @@ export const useGetAllPosts = () => {
     },
   });
 
-  return { isFetching, isError, isSuccess };
+  return { isFetching, isError, isSuccess, on_fetch_posts_transition };
 };
 
 export const useCountUpdators = (postId: string) => {
   const updatePosts = useAppStore((state) => state.updatePosts);
 
   const [likeState, setLikeState] = useState<"pending" | "stable">("stable");
+  const [on_like_updating_state, startLikeTransition] = useTransition();
 
   const [dislikeState, setDislikeState] = useState<"pending" | "stable">(
     "stable"
   );
+  const [on_dislike_updating_state, startDislikeTransition] = useTransition();
 
   return {
     likePost: async () => {
@@ -83,7 +87,7 @@ export const useCountUpdators = (postId: string) => {
         );
 
         if (response.status < 400) {
-          updatePosts(response.data);
+          startLikeTransition(() => updatePosts(response.data));
         }
       } catch (e) {
         enqueueSnackbar("An error occured trying to like this post !");
@@ -104,7 +108,7 @@ export const useCountUpdators = (postId: string) => {
         );
 
         if (response.status < 400) {
-          updatePosts(response.data);
+          startDislikeTransition(() => updatePosts(response.data));
         }
       } catch (e) {
         enqueueSnackbar("An error occured trying to dislike this post !");
@@ -114,5 +118,32 @@ export const useCountUpdators = (postId: string) => {
     },
     likeState,
     dislikeState,
+    on_like_updating_state,
+    on_dislike_updating_state,
   };
+};
+
+export const useDeletePost = () => {
+  const [on_delete_updating_state, startTransition] = useTransition();
+  const deletePost = useAppStore((state) => state.deletePost);
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["post"],
+    mutationFn: async (id: string) => {
+      try {
+        const response = await Axios.delete(BASE_URL.concat(`/post/${id}`), {
+          withCredentials: true,
+        });
+
+        if (response.status === 204) {
+          startTransition(() => deletePost(id));
+        }
+      } catch (e) {
+        handleErrors(e as AxiosError);
+        return e;
+      }
+    },
+  });
+
+  return { mutate, isPending, on_delete_updating_state };
 };

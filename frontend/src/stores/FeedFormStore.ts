@@ -10,6 +10,7 @@ interface State {
 interface Actions {
   addFiles: (files: File[] | FileList | null) => void;
   removeFile: (id: string) => void;
+  clearFiles: () => void;
 }
 
 const useFeedFormStore = create<State & Actions>()((set) => ({
@@ -34,6 +35,9 @@ const useFeedFormStore = create<State & Actions>()((set) => ({
         }),
       };
     });
+  },
+  clearFiles() {
+    set((state) => ({ ...state, files: [] }));
   },
 }));
 

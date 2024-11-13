@@ -8,9 +8,13 @@ import { usePostAPost } from "../../../hooks/postHooks";
 import Loader from "../../cross-app/Loader";
 
 const Form = () => {
-  const files = useFeedFormStore((state) => state.files);
+  const { clearFiles, files } = useFeedFormStore();
   const [textContent, setTextContent] = useState("");
-  const { isPending, mutate } = usePostAPost();
+  const { isPending, mutate } = usePostAPost(() => {
+    // Reset the states - On success
+    setTextContent("");
+    clearFiles();
+  });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

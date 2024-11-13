@@ -9,6 +9,8 @@ const UserActionsOnFeed = ({
   seen,
   comments,
   postId,
+  isAuthor,
+  countMediaFiles,
 }: {
   onReplyIconClick: () => void;
   likes: number;
@@ -16,14 +18,22 @@ const UserActionsOnFeed = ({
   seen: number;
   comments: number;
   postId: string;
+  isAuthor: boolean;
+  countMediaFiles: number;
 }) => {
-  const { dislikePost, likePost, likeState, dislikeState } =
-    useCountUpdators(postId);
+  const {
+    dislikePost,
+    likePost,
+    likeState,
+    dislikeState,
+    on_dislike_updating_state,
+    on_like_updating_state,
+  } = useCountUpdators(postId);
 
   return (
     <div className="user__actions__on__feed">
       <button className="like action" onClick={likePost}>
-        {likeState !== "pending" ? (
+        {likeState !== "pending" || on_like_updating_state ? (
           <ThumbsUp size={20} />
         ) : (
           <Loader height={20} width={20} />
@@ -31,7 +41,7 @@ const UserActionsOnFeed = ({
         <span>{likes}</span>
       </button>
       <button className="dislike action" onClick={dislikePost}>
-        {dislikeState !== "pending" ? (
+        {dislikeState !== "pending" || on_dislike_updating_state ? (
           <ThumbsDown size={20} />
         ) : (
           <Loader height={20} width={20} />
@@ -42,14 +52,19 @@ const UserActionsOnFeed = ({
         <Reply size={20} />
         <span>{comments}</span>
       </button>
-      <button className="seen action">
-        <Eye size={20} />
-        <span>{seen}</span>
-      </button>
-      <button className="count__images action">
-        <Image size={20} />
-        <span>10</span>
-      </button>
+      {isAuthor && (
+        <button className="seen action">
+          <Eye size={20} />
+          <span>{seen}</span>
+        </button>
+      )}
+
+      {countMediaFiles > 2 && (
+        <button className="count__images action">
+          <Image size={20} />
+          <span>{countMediaFiles}</span>
+        </button>
+      )}
     </div>
   );
 };

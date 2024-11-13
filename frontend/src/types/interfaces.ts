@@ -1,12 +1,22 @@
+export interface PostMediaFileType {
+  url: string;
+  public_id: string;
+}
+
+export interface UserPictureType {
+  url: string;
+  public_id: string;
+}
+
 export interface StateUserType {
   name: string;
   password: string;
-  picture?: File | string;
+  picture?: File | UserPictureType;
 }
 
 export interface StatePostType {
   textContent: string;
-  mediaFiles: File[] | string[];
+  mediaFiles: File[] | PostMediaFileType[];
 }
 
 export interface User extends StateUserType {
