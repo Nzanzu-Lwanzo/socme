@@ -1,15 +1,16 @@
 import { ImagePlus, Clapperboard } from "lucide-react";
 import { ChangeEvent, useRef } from "react";
-import useFeedFormStore from "../../../stores/FeedFormStore";
 
-const SelectMedias = () => {
+const SelectMedias = ({
+  onMediaSelected,
+}: {
+  onMediaSelected: (files: File[] | FileList | null) => void;
+}) => {
   const mediaInputRef = useRef<HTMLInputElement | null>(null);
-
-  const addFiles = useFeedFormStore((state) => state.addFiles);
 
   const onSelectedMedias = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    addFiles(files);
+    onMediaSelected(files);
   };
 
   return (

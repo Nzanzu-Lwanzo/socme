@@ -78,3 +78,9 @@
     width: 90%;
   }
 }
+
+@media only all and (max-width:425px) {
+  .profile__page .preview__image {
+    min-height: 100px;
+  }
+}

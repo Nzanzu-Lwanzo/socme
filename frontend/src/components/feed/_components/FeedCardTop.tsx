@@ -1,38 +1,42 @@
 import { COLOR_SCHEMA } from "../../../utils/constants";
-import { Ellipsis, X, Bell } from "lucide-react";
+import { Ellipsis, X, Edit } from "lucide-react";
 import UserProfile from "../../cross-app/UserProfile";
-import { PopulateUserType } from "../../../types/interfaces";
+import { PopulateUserType, Post } from "../../../types/interfaces";
 import useAppStore from "../../../stores/AppStore";
 import { useDeletePost } from "../../../hooks/postHooks";
 import Loader from "../../cross-app/Loader";
+import { useState } from "react";
+import useFeedFormStore from "../../../stores/FeedFormStore";
 
-const FeedCardTop = ({
-  _id,
-  textContent,
-  author,
-  postDate,
-}: {
-  _id: string;
-  textContent: string;
-  author: PopulateUserType;
-  postDate: string;
-}) => {
+const FeedCardTop = ({ post }: { post: Post }) => {
   // Use the ID for further mutations
   const { isPending, mutate, on_delete_updating_state } = useDeletePost();
-  const auth = useAppStore((state) => state.auth);
+  const { auth, setModal } = useAppStore();
+  const [clampTextContent, setClampTextContent] = useState(true);
+  const addPostToUpdate = useFeedFormStore((state) => state.addPostToUpdate);
 
   return (
     <div className="feed__card__top">
       <div className="user__and__actions">
-        <UserProfile user={author} withDate={postDate} />
+        <UserProfile
+          user={post?.author as PopulateUserType}
+          withDate={post.createdAt}
+        />
         <div className="actions">
-          <button type="button" className="action">
-            <Bell size={20} stroke={COLOR_SCHEMA.black} />
-          </button>
-          {author._id === auth?._id && (
+          {(post.author as PopulateUserType)._id === auth?._id && (
             <>
               <button type="button" className="action">
                 <Ellipsis size={20} stroke={COLOR_SCHEMA.black} />
+              </button>
+              <button
+                type="button"
+                className="action"
+                onClick={() => {
+                  addPostToUpdate(post);
+                  setModal("UPDATE_POST_FORM");
+                }}
+              >
+                <Edit size={20} stroke={COLOR_SCHEMA.black} />
               </button>
               <button
                 type="button"
@@ -43,7 +47,7 @@ const FeedCardTop = ({
                   );
 
                   if (confirmed) {
-                    mutate(_id);
+                    mutate(post._id);
                   }
                 }}
               >
@@ -58,7 +62,12 @@ const FeedCardTop = ({
         </div>
       </div>
       <div className="feed__description">
-        <p>{textContent}</p>
+        <p
+          className={`${clampTextContent ? "clamp" : null}`}
+          onClick={() => setClampTextContent((prev) => !prev)}
+        >
+          {post.textContent}
+        </p>
       </div>
     </div>
   );

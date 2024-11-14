@@ -8,7 +8,7 @@ import { usePostAPost } from "../../../hooks/postHooks";
 import Loader from "../../cross-app/Loader";
 
 const Form = () => {
-  const { clearFiles, files } = useFeedFormStore();
+  const { clearFiles, files, addFiles } = useFeedFormStore();
   const [textContent, setTextContent] = useState("");
   const { isPending, mutate } = usePostAPost(() => {
     // Reset the states - On success
@@ -32,7 +32,11 @@ const Form = () => {
     <form action="#" method="post" id="new__post__form" onSubmit={handleSubmit}>
       <div className="top">
         <UserProfile />
-        <SelectMedias />
+        <SelectMedias
+          onMediaSelected={(selectedFiles) => {
+            addFiles(selectedFiles);
+          }}
+        />
       </div>
 
       <div className="wrap__input">

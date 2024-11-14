@@ -37,7 +37,31 @@ const authUserShape = {
 
 export const authUserSchema = yup.object().shape(authUserShape);
 export const userProfileSchema = yup.object().shape({
-  ...authUserShape,
+  name: yup
+    .string()
+    .required("You must provide a username !")
+    .max(
+      nameMaxLength,
+      `The username must be ${nameMaxLength} characters max length, blank spaces included !`
+    )
+    .min(
+      nameMinLength,
+      `The username must be ${nameMinLength} characters min length, blank spaces included !`
+    ),
+  password: yup
+    .string()
+    .nullable()
+    .max(
+      passwordMaxLength,
+      `The password must be ${passwordMaxLength} characters max length, no blank spaces !`
+    )
+    .min(
+      passwordMinLength,
+      `The password must be ${passwordMinLength} characters min length, no blank spaces !`
+    )
+    .matches(/^\S*$/i, {
+      message: "You can't have blank spaces in your password, strip em out !",
+    }),
   picture: yup
     .mixed()
     .nullable()

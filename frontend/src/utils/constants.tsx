@@ -26,6 +26,9 @@ export const BASE_URL = MAP_ENV_ORIGIN[ENV] + "/api";
 // See "countPostsToFetch" variable in "getPosts" controller
 export const postCountListAndSkip = 2;
 
+export const maxMediaCount = 2;
+
+
 // For form validation
 export let nameMaxLength = 32;
 export let nameMinLength = 6;

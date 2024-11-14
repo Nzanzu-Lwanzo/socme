@@ -6,6 +6,7 @@ import { handleErrors } from "../utils/handlersAndFormatters";
 import { useNavigate } from "react-router-dom";
 import { useState, useTransition } from "react";
 import { enqueueSnackbar } from "notistack";
+import useFeedFormStore from "../stores/FeedFormStore";
 
 export const usePostAPost = (onSucces: () => void) => {
   const addPost = useAppStore((state) => state.addPost);
@@ -146,4 +147,66 @@ export const useDeletePost = () => {
   });
 
   return { mutate, isPending, on_delete_updating_state };
+};
+
+export const useUpdatePost = (id: string) => {
+  const { updatePosts, setModal } = useAppStore();
+  const [on_update_post_transition, startTransition] = useTransition();
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["post", "update"],
+    mutationFn: async (data: FormData) => {
+      try {
+        const response = await Axios.patch(
+          BASE_URL.concat(`/post/${id}`),
+          data,
+          { withCredentials: true }
+        );
+
+        if (response.status < 400) {
+          startTransition(() => updatePosts(response.data));
+          setModal(null);
+        }
+      } catch (e) {
+        handleErrors(e as AxiosError);
+      }
+    },
+  });
+
+  return { mutate, isPending, on_update_post_transition };
+};
+
+export const useDeleteCloudImage = () => {
+  const [status, setStatus] = useState<"stable" | "error" | "pending">(
+    "stable"
+  );
+  const updatePosts = useAppStore((state) => state.updatePosts);
+  const [on_update_post_transition, startTransition] = useTransition();
+
+  const deleteImageFromPostToUpdate = useFeedFormStore(
+    (state) => state.deleteImageFromPostToUpdate
+  );
+
+  return {
+    requestDeletion: async (post_id: string, public_id: string) => {
+      setStatus("pending");
+      try {
+        const response = await Axios.delete(
+          BASE_URL.concat(`/post/${post_id}/${public_id}`),
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          deleteImageFromPostToUpdate(public_id);
+          startTransition(() => updatePosts(response.data));
+        }
+      } catch (e) {
+        enqueueSnackbar("Error trying to delete an image !");
+      } finally {
+        setStatus("stable");
+      }
+    },
+    status,
+    on_update_post_transition,
+  };
 };

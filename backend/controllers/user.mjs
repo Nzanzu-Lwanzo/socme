@@ -83,18 +83,25 @@ export const updateUserProfile = async (req, res) => {
 
     if (!manuallyValidateName(name))
       return res.status(406).json({ error: "INVALID_USERNAME" });
-    if (!manuallyValidatePassword(password))
+    if (password && !manuallyValidatePassword(password))
       return res.status(406).json({ error: "INVALID_PASSWORD" });
 
     let pictureImageData;
 
     if (req.file) {
       // Delete the the ancient profile picture
-      await cloudinary.uploader.destroy(old_picture_public_id, {
-        invalidate: true,
-        type: "upload",
-        resource_type: "image",
-      });
+      try {
+        await cloudinary.uploader.destroy(old_picture_public_id, {
+          invalidate: true,
+          type: "upload",
+          resource_type: "image",
+        });
+      } catch (e) {
+        // Store this public_id value somewhere
+        // where we store the ids of stale images
+        // that were not deleted. We'll use these ids
+        // in the future to delete them.
+      }
 
       // Upload the new profile picture
       const public_id = nanoid();
@@ -106,7 +113,7 @@ export const updateUserProfile = async (req, res) => {
         });
 
         pictureImageData = {
-          url: result.url,
+          url: result.url.replace("http", "https"),
           public_id,
         };
       } catch (e) {

@@ -28,7 +28,7 @@ $sectionsHeight: calc(100vh - $header__height);
 
   .feed {
     width: 100%;
-    min-height: 300px;
+    // min-height: 300px;
     background-color: $white;
     border-radius: 4px;
     overflow: hidden;
@@ -38,7 +38,7 @@ $sectionsHeight: calc(100vh - $header__height);
     .images {
       max-width: 100%;
       position: relative;
-      min-height: 150px;
+      min-height: 50px;
 
       &.many {
         display: grid;
@@ -72,7 +72,7 @@ $sectionsHeight: calc(100vh - $header__height);
             flex-direction: column;
 
             .date {
-              font-size: .7rem;
+              font-size: 0.7rem;
             }
           }
         }
@@ -108,7 +108,11 @@ $sectionsHeight: calc(100vh - $header__height);
       font-size: 0.9rem;
 
       p {
-        @include clamp($lines:3);
+        line-height: 1.3rem;
+      }
+
+      p.clamp {
+        @include clamp($lines: 3);
       }
     }
 
@@ -382,6 +386,137 @@ $sectionsHeight: calc(100vh - $header__height);
   }
 }
 
+.update__post__form {
+  min-height: 100px;
+  width: 100%;
+  background-color: $white;
+  padding: 0 1rem 1rem;
+  border-radius: 4px;
+  @extend .box__shadow;
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wrap__input {
+    font-size: 0.8rem;
+    textarea {
+      width: 100%;
+      border-radius: 3px;
+      padding: 1rem;
+      border: 2px solid $black;
+      margin-top: 0.5rem;
+      resize: none;
+      min-height: 150px;
+    }
+  }
+
+  .select__medias {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    padding-block: .5rem;
+
+    button {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      @extend .center;
+      cursor: pointer;
+      transition: 0.2s ease-in;
+
+      &:hover {
+        background-color: $black;
+        svg {
+          stroke: $white;
+        }
+      }
+    }
+  }
+
+  .chosen__medias {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding-block: 1rem;
+    display: none;
+
+    &.chosen__medias__exist {
+      display: grid;
+    }
+
+    .media__container {
+      position: relative;
+      min-height: 109px;
+
+      .loader__layer {
+        height: 100%;
+        width: 100%;
+        @extend .center;
+        background-color: $black;
+      }
+
+      .blur {
+        position: absolute;
+        inset: 0;
+        background-color: rgba($color: #000000, $alpha: 0.2);
+        backdrop-filter: blur(1px);
+        opacity: 0;
+        pointer-events: none;
+
+        &.trigger {
+          opacity: 1;
+          pointer-events: all;
+        }
+
+        &:has(.text) {
+          @extend .center;
+          font-weight: bold;
+          background-color: rgba($color: #000000, $alpha: 0.5);
+          color: $white;
+          backdrop-filter: blur(2px);
+        }
+
+        .remove__media {
+          background-color: transparent;
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+          cursor: pointer;
+        }
+
+        &.show {
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+    }
+  }
+
+  .post__image__already__on__cloud {
+    position: relative;
+    .blur {
+      position: absolute;
+      inset: 0;
+      background-color: rgba($color: #000000, $alpha: 0.2);
+      backdrop-filter: blur(1px);
+
+      .delete__image {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        @extend .button__icon;
+      }
+    }
+  }
+
+  .post__a__feed {
+    @extend .button__text__and__icon;
+  }
+}
+
 // MEDIA QUERIES
 @media only all and (max-width: 1300px) {
   #feed {
@@ -433,6 +568,10 @@ $sectionsHeight: calc(100vh - $header__height);
 @media only all and (max-width: 600px) {
   #feed {
     width: 100%;
+  }
+
+  #feed .feed .feed__description p {
+    font-size: 0.8rem;
   }
 
   #feed .feed {

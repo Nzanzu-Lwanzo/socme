@@ -23,6 +23,8 @@ const client = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       refetchInterval: 10 * 60 * 1000,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     },
   },
 });

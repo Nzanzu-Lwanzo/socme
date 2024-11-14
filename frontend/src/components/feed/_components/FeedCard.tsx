@@ -21,17 +21,14 @@ const FeedCard = ({ post }: { post: Post }) => {
 
   return (
     <div className="feed">
-      <FeedCardTop
-        author={author}
-        _id={post._id}
-        textContent={post.textContent}
-        postDate={post.createdAt}
-      />
-      <FeedImages
-        images={(post.mediaFiles as PostMediaFileType[]).map(
-          (mediaFile) => mediaFile.url
-        )}
-      />
+      <FeedCardTop post={post} />
+      {post.mediaFiles.length >= 1 && (
+        <FeedImages
+          images={(post.mediaFiles as PostMediaFileType[]).map(
+            (mediaFile) => mediaFile.url
+          )}
+        />
+      )}
       <div className="bottom">
         <UserActionsOnFeed
           isAuthor={author._id === auth?._id}

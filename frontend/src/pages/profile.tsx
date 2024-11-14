@@ -87,16 +87,21 @@ const Profile = () => {
 
     const data = new FormData(e.currentTarget);
 
+    let resolvedPassword =
+      data.get("password")?.toString().length !== 0
+        ? data.get("password")
+        : null;
+
     const profile = {
       name: data.get("name"),
-      password: data.get("password"),
+      password: resolvedPassword,
       picture: data.get("picture"),
     } as StateUserType;
 
     let isValid = userProfileSchema.isValidSync(profile);
 
     if (!isValid) {
-      return enqueueSnackbar("Données invalides ou incomplètes !");
+      return enqueueSnackbar("Incomplete or invalid data !");
     }
 
     // Send to the backend
@@ -131,7 +136,6 @@ const Profile = () => {
               type="text"
               placeholder="You're gonna have to provide a new one"
               name="password"
-              required
               min={passwordMinLength}
               max={passwordMaxLength}
             />

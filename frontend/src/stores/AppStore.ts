@@ -3,7 +3,7 @@ import { User } from "../types/interfaces";
 import { lsRead } from "../db/ls.io";
 import { type Post } from "../types/interfaces";
 
-export type ModalSectionType = "SETTINGS" | "PROFILE" | null;
+export type ModalSectionType = "SETTINGS" | "UPDATE_POST_FORM" | null;
 
 interface State {
   auth: User | undefined;
