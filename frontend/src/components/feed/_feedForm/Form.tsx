@@ -63,7 +63,7 @@ const Form = () => {
             <Loader height={20} width={20} />
           ) : (
             <>
-              <span>Post a feed</span>
+              <span>Post Now</span>
               <span className="icon">
                 <Newspaper size={20} />
               </span>

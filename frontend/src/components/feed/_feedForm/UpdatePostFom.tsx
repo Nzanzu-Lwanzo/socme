@@ -13,7 +13,9 @@ import { PostMediaFileType } from "../../../types/interfaces";
 const UpdatePostFom = () => {
   const postToUpdate = useFeedFormStore((state) => state.postToUpdate);
   const [files, setFiles] = useState<MediaFileType[]>([]);
-  const [textContent, setTextContent] = useState("");
+  const [textContent, setTextContent] = useState<string | undefined>(
+    postToUpdate?.textContent
+  );
 
   const { mutate, isPending, on_update_post_transition } = useUpdatePost(
     postToUpdate?._id!
@@ -23,7 +25,7 @@ const UpdatePostFom = () => {
     event.preventDefault();
     const post = new FormData();
 
-    post.append("textContent", textContent);
+    post.append("textContent", textContent!); // Red flag !!!! But works anyway !!!
     files.forEach((file) => {
       post.append("mediaFiles", file.data);
     });
@@ -38,7 +40,7 @@ const UpdatePostFom = () => {
           name="description"
           id="description"
           placeholder="Hey Nzanzu Lwanzo, what's on your mind today ?"
-          defaultValue={postToUpdate?.textContent}
+          value={textContent}
           onChange={(e) => setTextContent(e.target.value)}
         ></textarea>
       </div>
@@ -100,7 +102,7 @@ const UpdatePostFom = () => {
           <Loader height={20} width={20} />
         ) : (
           <>
-            <span>Post a feed</span>
+            <span>Update</span>
             <span className="icon">
               <Newspaper size={20} />
             </span>

@@ -183,26 +183,29 @@ export const deletePost = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     let { id } = req.params;
-    const data = req.body;
+    const { textContent } = req.body;
     const files = req.files;
 
     let postMediaFiles = await saveMediaFilesOnCloud(files);
 
-    const updateObject =
-      postMediaFiles.length > 1
-        ? {
-            ...data,
-            $addToSet: { mediaFiles: postMediaFiles },
-          }
-        : { ...data };
-
-    const post = await Post.findByIdAndUpdate(id, updateObject, {
-      populate: {
-        path: "author",
-        select: "_id name picture",
+    const post = await Post.findByIdAndUpdate(
+      id,
+      {
+        $set: { textContent: textContent },
+        $addToSet: {
+          mediaFiles: {
+            $each: postMediaFiles,
+          },
+        },
       },
-      new: true,
-    });
+      {
+        populate: {
+          path: "author",
+          select: "_id name picture",
+        },
+        new: true,
+      }
+    );
 
     res.json(post);
   } catch (e) {
