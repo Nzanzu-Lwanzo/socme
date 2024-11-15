@@ -18,6 +18,8 @@ interface Actions {
   addPosts: (posts: Post[]) => void;
   updatePosts: (post: Post) => void;
   deletePost: (id: string) => void;
+  setPosts: (posts: Post[]) => void;
+  deletePostComment: (postId: string, commentId: string) => void;
 }
 
 const useAppStore = create<State & Actions>()((set) => ({
@@ -58,6 +60,34 @@ const useAppStore = create<State & Actions>()((set) => ({
   deletePost(id) {
     set((state) => {
       return { ...state, posts: state.posts.filter((post) => post._id !== id) };
+    });
+  },
+
+  // Must be used with a transition
+  setPosts(posts) {
+    set((state) => ({ ...state, posts }));
+  },
+
+  // Must be used with a transition
+  deletePostComment(postId, commentId) {
+    set((state) => {
+      const postsCopy = [...state.posts];
+
+      // Find the post and remove the deleted comment
+      const postFound = state.posts.find((post) => post._id === postId);
+
+      if (!postFound) return state;
+
+      const filteredComments =
+        postFound?.comments.filter((comment) => comment._id !== commentId) ||
+        [];
+
+      // Replace the post itself
+      const updatedPost = { ...postFound, comments: filteredComments };
+      let idx = state.posts.findIndex((post) => post._id === postId);
+      postsCopy.splice(idx, 1, updatedPost);
+
+      return { ...state, posts: postsCopy };
     });
   },
 }));

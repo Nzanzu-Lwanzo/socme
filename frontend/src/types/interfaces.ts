@@ -41,9 +41,11 @@ export interface Post extends StatePostType {
 }
 
 export interface Comment {
+  _id: string;
   content: string;
   post: string;
   author: PopulateUserType;
   likes: number;
   dislikes: number;
+  createdAt: string;
 }

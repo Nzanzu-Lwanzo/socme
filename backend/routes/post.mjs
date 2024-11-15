@@ -7,6 +7,8 @@ import {
   deletePost,
   updatePost,
   deletePostImage,
+  saveCommentOnPost,
+  deleteComment,
 } from "../controllers/post.mjs";
 import { validateIdParam, validateSession } from "../utils/middlewares.mjs";
 import fileUploader from "../utils/multer.setup.mjs";
@@ -18,6 +20,19 @@ postRouter.post(
   validateSession,
   fileUploader.array("mediaFiles"),
   saveAPost
+);
+
+postRouter.post(
+  "/comment/:id",
+  validateSession,
+  validateIdParam,
+  saveCommentOnPost
+);
+
+postRouter.delete(
+  "/comment/:postId/:commentId",
+  validateSession,
+  deleteComment
 );
 
 postRouter.get("/", validateSession, getPosts);

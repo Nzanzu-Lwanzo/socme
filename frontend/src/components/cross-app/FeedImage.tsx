@@ -20,7 +20,9 @@ const FeedImage = ({ image }: { image: string }) => {
       ) : imageState === "loading" ? (
         <Loader height={25} width={25} />
       ) : imageState === "error" ? (
-        <div className="load__image__error">Image non chargée</div>
+        <div className="load__image__error">
+          <span> 404 : image not found</span>
+        </div>
       ) : null}
     </>
   );

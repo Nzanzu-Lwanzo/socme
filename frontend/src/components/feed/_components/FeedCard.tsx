@@ -40,7 +40,11 @@ const FeedCard = ({ post }: { post: Post }) => {
           onReplyIconClick={expandTab}
           countMediaFiles={post.mediaFiles.length}
         />
-        <Comments comments={post.comments || []} expand={expandCommentsTab} />
+        <Comments
+          postId={post._id}
+          comments={post.comments || []}
+          expand={expandCommentsTab}
+        />
       </div>
     </div>
   );

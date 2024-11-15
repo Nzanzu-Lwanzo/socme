@@ -20,6 +20,10 @@
     border: 2px dashed $black;
     position: relative;
 
+    &:has(.no__profile__picture__message) {
+      padding: 1rem;
+    }
+
     &:has(img) {
       border: none;
       .no__profile__picture__message {
@@ -35,10 +39,11 @@
     }
 
     .no__profile__picture__message {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       text-align: center;
       text-decoration: underline;
       cursor: pointer;
+      line-height: 1.3rem;
     }
 
     .change__image {
@@ -79,7 +84,7 @@
   }
 }
 
-@media only all and (max-width:425px) {
+@media only all and (max-width: 425px) {
   .profile__page .preview__image {
     min-height: 100px;
   }

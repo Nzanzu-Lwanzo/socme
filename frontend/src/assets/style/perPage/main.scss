@@ -35,6 +35,19 @@ $sectionsHeight: calc(100vh - $header__height);
 
     @extend .box__shadow;
 
+    .load__image__error {
+      height: 250px;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      backdrop-filter: blur(10px);
+      @extend .center;
+      font-size: 0.8rem;
+      padding: 1rem;
+
+      span {
+        text-align: center;
+      }
+    }
+
     .images {
       max-width: 100%;
       position: relative;
@@ -72,7 +85,7 @@ $sectionsHeight: calc(100vh - $header__height);
             flex-direction: column;
 
             .date {
-              font-size: 0.7rem;
+              font-size: 0.65rem;
             }
           }
         }
@@ -167,9 +180,23 @@ $sectionsHeight: calc(100vh - $header__height);
         transition: 0.4s ease-in;
         overflow: hidden;
 
+        .comment__date {
+          font-size: 0.65rem;
+        }
+
         &.expand {
           height: 100%;
           padding-block: 1rem;
+          .no__comments {
+            height: 50px;
+            @extend .center;
+            font-size: 0.8rem;
+            padding: 1rem;
+            span {
+              text-align: center;
+              line-height: 1.2rem;
+            }
+          }
         }
 
         .timeline {
@@ -226,8 +253,12 @@ $sectionsHeight: calc(100vh - $header__height);
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: 0.5rem;
+            gap: 0.8rem;
             justify-content: flex-start;
+
+            .comment__text {
+              font-size: 0.8rem;
+            }
 
             .profile {
               @extend .user__profile;
@@ -274,6 +305,7 @@ $sectionsHeight: calc(100vh - $header__height);
                   border-radius: 20px;
                   cursor: pointer;
                   transition: 0.3s ease-out;
+                  font-size: 0.8rem;
 
                   .icon {
                     @extend .center;
@@ -289,6 +321,36 @@ $sectionsHeight: calc(100vh - $header__height);
                 }
               }
             }
+          }
+        }
+
+        .comment__box {
+          height: 40px;
+          width: 100%;
+          background-color: black;
+          display: flex;
+          align-items: stretch;
+          justify-content: flex-start;
+          border: 2px solid $black;
+          border-radius: 3px;
+          margin-top: 1rem;
+
+          input {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 0.8rem;
+          }
+
+          button {
+            @extend .center;
+            padding: 0.5rem;
+            background-color: $black;
+            cursor: pointer;
+          }
+
+          input,
+          button {
+            height: 100%;
           }
         }
       }
@@ -346,15 +408,16 @@ $sectionsHeight: calc(100vh - $header__height);
         padding: 0.5rem;
         border-radius: 3px;
         font-size: 0.8rem;
-        background-color: $black;
+        background-color: transparent;
+        color: $black;
         border: 2px solid $black;
-        color: $white;
         cursor: pointer;
         transition: 0.2s ease-out;
 
+        &.active,
         &:hover {
-          background-color: transparent;
-          color: $black;
+          background-color: $black;
+          color: $white;
         }
       }
     }
@@ -418,7 +481,7 @@ $sectionsHeight: calc(100vh - $header__height);
     justify-content: flex-end;
     align-items: center;
     gap: 1rem;
-    padding-block: .5rem;
+    padding-block: 0.5rem;
 
     button {
       height: 30px;
@@ -570,6 +633,7 @@ $sectionsHeight: calc(100vh - $header__height);
     width: 100%;
   }
 
+  .comments .timeline .container p,
   #feed .feed .feed__description p {
     font-size: 0.8rem;
   }

@@ -3,6 +3,8 @@ import "../utils/cloudinary.setup.mjs";
 import { v2 as cloudinary } from "cloudinary";
 import { isValidObjectId } from "mongoose";
 import { nanoid } from "nanoid";
+import Comment from "../db/models/comments.mjs";
+import { populate } from "dotenv";
 
 const saveMediaFilesOnCloud = async (files) => {
   if (!files) return [];
@@ -79,10 +81,20 @@ export const getPosts = async (req, res) => {
       {},
       {},
       {
-        populate: {
-          path: "author",
-          select: "_id name picture",
-        },
+        populate: [
+          {
+            path: "author",
+            select: "_id name picture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "_id name picture",
+            },
+          },
+        ],
+        limit: 10,
         sort: "-createdAt -updatedAt",
       }
     );
@@ -243,6 +255,89 @@ export const deletePostImage = async (req, res) => {
 
     res.status(200).json(post);
   } catch (e) {
+    res.sendStatus(500);
+  }
+};
+
+export const saveCommentOnPost = async (req, res) => {
+  try {
+    let { id } = req.params;
+    let { comment: content } = req.body;
+
+    // Create comment
+    const comment = await Comment.create({
+      content,
+      post: id,
+      author: req.user._id,
+    });
+
+    // Save in on the post
+    const post = await Post.findByIdAndUpdate(
+      id,
+      { $addToSet: { comments: comment._id } },
+      {
+        new: true,
+        populate: [
+          {
+            path: "author",
+            select: "_id name picture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "_id name picture",
+            },
+          },
+        ],
+      }
+    );
+
+    // Return the new comment
+    res.status(201).json(post);
+
+    /*
+
+      ************************ OPTIMIZE THIS CONTROLLER ******
+
+      Instead of creating a comment and then saving the comment id on the post and then 
+      populating all the comments that are saved on the post to return them back to the user, 
+      it would be more performant to only save the comment, save the comment id on the post,
+      and then return the comment to the frontend.
+
+      The frontend will then lookup the posts state, loop over all the posts, find the post to which
+      this comment belong and add it to the array of comments of that particular post. That will be 
+      a lot of work for the frontend (heaving computations when updating the state), but wrapper in a 
+      useTransition hook would make things work a little better (especially for user feedback meanwhile 
+      the state is being updated.)
+    
+    
+    */
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    let { postId, commentId } = req.params;
+
+    if (!isValidObjectId(postId) || !isValidObjectId(commentId)) {
+      throw new Error("INVALID_PARAMS");
+    }
+
+    // Delete the comment, first
+    await Comment.findByIdAndDelete(commentId);
+
+    // Remove the comment id from the post
+    await Post.findByIdAndUpdate(postId, {
+      $pull: { comments: commentId },
+    });
+
+    res.sendStatus(204);
+  } catch (e) {
+    console.log(e);
     res.sendStatus(500);
   }
 };

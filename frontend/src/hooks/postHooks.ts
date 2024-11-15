@@ -210,3 +210,79 @@ export const useDeleteCloudImage = () => {
     on_update_post_transition,
   };
 };
+
+export const useFilterAndSearch = () => {
+  return {
+    showAll: () => {},
+    showMyPosts: () => {},
+    showPostByAuthor: (e: string) => {
+      e.toLocaleLowerCase();
+    },
+
+    showPostByTextContent: (e: string) => {
+      e.toLocaleLowerCase();
+    },
+  };
+};
+
+export const usePostComment = (onSucces: () => void) => {
+  const updatePosts = useAppStore((state) => state.updatePosts);
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["comment"],
+    mutationFn: async ({
+      comment,
+      postId,
+    }: {
+      comment: string;
+      postId: string;
+    }) => {
+      try {
+        const response = await Axios.post(
+          BASE_URL.concat(`/post/comment/${postId}`),
+          { comment },
+          { withCredentials: true }
+        );
+
+        if (response.status === 201) {
+          updatePosts(response.data);
+          onSucces();
+        }
+      } catch (e) {
+        handleErrors(e as AxiosError);
+      }
+    },
+  });
+
+  return { mutate, isPending };
+};
+
+export const useDeletePostComment = () => {
+  const deletePostComment = useAppStore((state) => state.deletePostComment);
+
+  const [status, setStatus] = useState<"stable" | "error" | "pending">(
+    "stable"
+  );
+
+  return {
+    requestDeletion: async (commentId: string, postId: string) => {
+      try {
+        setStatus("pending");
+        const response = await Axios.delete(
+          BASE_URL.concat(`/post/comment/${postId}/${commentId}`),
+          { withCredentials: true }
+        );
+
+        if (response.status === 204) {
+          deletePostComment(postId, commentId);
+        }
+
+        setStatus("stable");
+      } catch (e) {
+        setStatus("error");
+        handleErrors(e as AxiosError);
+      }
+    },
+    status,
+  };
+};
