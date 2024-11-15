@@ -141,6 +141,7 @@ body {
 
 .modal__panel {
   position: fixed;
+  z-index: 10;
   inset: 0;
   height: 100vh;
   width: 100vw;
@@ -499,21 +500,20 @@ body {
   }
 }
 
-
 // MEDIA QUERIES
-@media only all and (max-width:1000px) {
+@media only all and (max-width: 1000px) {
   .modal__card {
     width: 80%;
   }
 }
 
-@media only all and (max-width:700px) {
+@media only all and (max-width: 700px) {
   .modal__card {
     width: 95%;
 
     textarea,
     input {
-      font-size: .75rem !important;
+      font-size: 0.75rem !important;
     }
 
     .modal__card__top {

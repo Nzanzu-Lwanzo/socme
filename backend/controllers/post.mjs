@@ -121,10 +121,19 @@ export const likePost = async (req, res) => {
       },
       {
         new: true,
-        populate: {
-          path: "author",
-          select: "_id name picture",
-        },
+        populate: [
+          {
+            path: "author",
+            select: "_id name picture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "_id name picture",
+            },
+          },
+        ],
       }
     );
 
@@ -151,10 +160,19 @@ export const dislikePost = async (req, res) => {
       },
       {
         new: true,
-        populate: {
-          path: "author",
-          select: "_id name picture",
-        },
+        populate: [
+          {
+            path: "author",
+            select: "_id name picture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "_id name picture",
+            },
+          },
+        ],
       }
     );
 
@@ -211,10 +229,19 @@ export const updatePost = async (req, res) => {
         },
       },
       {
-        populate: {
-          path: "author",
-          select: "_id name picture",
-        },
+        populate: [
+          {
+            path: "author",
+            select: "_id name picture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "_id name picture",
+            },
+          },
+        ],
         new: true,
       }
     );
@@ -245,12 +272,26 @@ export const deletePostImage = async (req, res) => {
         },
         {
           new: true,
-          populate: {
-            path: "author",
-            select: "_id name picture",
-          },
+          populate: [
+            {
+              path: "author",
+              select: "_id name picture",
+            },
+            {
+              path: "comments",
+              populate: {
+                path: "author",
+                select: "_id name picture",
+              },
+            },
+          ],
         }
       );
+
+      // Is it really necessary to return the updated post
+      // when we delete an image on that post ?
+      // Can' we just update a state on the frontend
+      // and remove that particular image to gain in performance ?
     }
 
     res.status(200).json(post);
