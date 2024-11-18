@@ -8,7 +8,7 @@ import { useState, useTransition } from "react";
 import { enqueueSnackbar } from "notistack";
 import useFeedFormStore from "../stores/FeedFormStore";
 
-export const usePostAPost = (onSucces: () => void) => {
+export const usePostAPost = (onSucces?: () => void) => {
   const addPost = useAppStore((state) => state.addPost);
   const navigateTo = useNavigate();
   const { mutate, isPending } = useMutation({
@@ -24,7 +24,7 @@ export const usePostAPost = (onSucces: () => void) => {
 
         if (response.status === 201) {
           addPost(response.data);
-          onSucces(); // The main purpose of this function it's to reinitialize the state of the post form
+          if (onSucces) onSucces(); // The main purpose of this function it's to reinitialize the state of the post form
           navigateTo("/");
         }
 
@@ -42,6 +42,8 @@ export const useGetPosts = () => {
   const { addPosts } = useAppStore();
   const [on_fetch_posts_transition, startTransition] = useTransition();
 
+  const navigateTo = useNavigate();
+
   const { isFetching, isError, isSuccess } = useQuery({
     queryKey: ["post"],
     queryFn: async () => {
@@ -56,7 +58,12 @@ export const useGetPosts = () => {
 
         return response.data;
       } catch (e) {
-        handleErrors(e as AxiosError);
+        const error = e as AxiosError;
+        handleErrors(error);
+
+        if (error.status === 401) {
+          navigateTo("/auth/login");
+        }
       }
     },
   });

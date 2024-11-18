@@ -230,17 +230,30 @@ body {
     justify-content: space-between;
   }
 
+  .inputs__and__data {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-block: 1rem;
+  }
+
   .wrap__input {
     font-size: 0.8rem;
-    padding-block: 1rem;
+    textarea {
+      min-height: 150px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    input,
     textarea {
       width: 100%;
       border-radius: 3px;
-      padding: 1rem;
       border: 2px solid $black;
-      margin-top: 0.5rem;
       resize: none;
-      min-height: 150px;
+      padding: 0.5rem;
     }
   }
 
@@ -270,7 +283,6 @@ body {
   .chosen__medias {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    padding-block: 1rem;
     display: none;
 
     &.chosen__medias__exist {
@@ -496,6 +508,53 @@ body {
     &:hover {
       background-color: transparent;
       color: $black;
+    }
+  }
+}
+
+.media__container {
+  position: relative;
+  min-height: 109px;
+
+  .loader__layer {
+    height: 100%;
+    width: 100%;
+    @extend .center;
+    background-color: $black;
+  }
+
+  .blur {
+    position: absolute;
+    inset: 0;
+    background-color: rgba($color: #000000, $alpha: 0.2);
+    backdrop-filter: blur(1px);
+    opacity: 0;
+    pointer-events: none;
+
+    &.trigger {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    &:has(.text) {
+      @extend .center;
+      font-weight: bold;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      color: $white;
+      backdrop-filter: blur(2px);
+    }
+
+    .remove__media {
+      background-color: transparent;
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      cursor: pointer;
+    }
+
+    &.show {
+      opacity: 1;
+      pointer-events: all;
     }
   }
 }

@@ -15,8 +15,10 @@ import Notifications from "./pages/Notifications";
 import NewPost from "./pages/NewPost";
 import { AppContectProvider } from "./contexts/AppContext";
 import Page404 from "./pages/404";
+import Draft from "./pages/Draft";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
+import { useEffect } from "react";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -25,12 +27,29 @@ const client = new QueryClient({
       refetchInterval: 10 * 60 * 1000,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      retryOnMount: false,
+      refetchIntervalInBackground: true,
     },
   },
 });
 
 function App() {
   const { auth } = useAppStore();
+
+  useEffect(() => {
+    const registerServiceWorker = async () => {
+      if ("serviceWorker" in navigator && !navigator.serviceWorker.controller) {
+        await navigator.serviceWorker.register("/sw.js", {
+          scope: "/",
+          type: "module",
+        });
+
+        return true;
+      }
+    };
+
+    registerServiceWorker();
+  }, []);
 
   return (
     <QueryClientProvider client={client}>
@@ -41,6 +60,10 @@ function App() {
               <Route
                 path="/"
                 element={auth ? <Main /> : <Navigate to="/auth/login" />}
+              />
+              <Route
+                path="/draft"
+                element={auth ? <Draft /> : <Navigate to="/auth/login" />}
               />
               <Route
                 path="/profile"

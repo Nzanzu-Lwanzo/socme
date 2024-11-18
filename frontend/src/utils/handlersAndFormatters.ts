@@ -34,7 +34,7 @@ export const handleErrors = (
   }
 };
 
-export function formatDate(dateString: string) {
+export function formatDate(dateString: string | Date) {
   const date = new Date(dateString);
 
   let year = date.getFullYear();
@@ -47,3 +47,15 @@ export function formatDate(dateString: string) {
 
   // Format the date using the Intl.DateTimeFormat object
 }
+
+export const postMessageToWorker = async (data: {
+  action: string;
+  req_data?: any;
+}) => {
+  try {
+    (await navigator.serviceWorker.ready).active?.postMessage(data);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

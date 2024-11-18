@@ -49,3 +49,8 @@ export interface Comment {
   dislikes: number;
   createdAt: string;
 }
+
+export interface DraftPostType extends StatePostType {
+  autoPostDateTime: string;
+  id: number;
+}
