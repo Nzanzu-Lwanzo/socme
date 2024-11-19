@@ -1,12 +1,12 @@
 import UserProfile from "../../cross-app/UserProfile";
 import { Newspaper, Calendar } from "lucide-react";
 import SelectMedias from "./SelectMedias";
-import useFeedFormStore  from "../../../stores/FeedFormStore";
+import useFeedFormStore from "../../../stores/FeedFormStore";
 import ListMedias from "../_components/ListMedias";
 import { FormEvent, useState } from "react";
 import { usePostAPost } from "../../../hooks/postHooks";
 import Loader from "../../cross-app/Loader";
-import { deviceSupportsServiceWorker } from "../../../utils/constants";
+import { deviceSupportsBackgroundPeriodicSync } from "../../../utils/constants";
 import { postMessageToWorker } from "../../../utils/handlersAndFormatters";
 import { enqueueSnackbar } from "notistack";
 
@@ -104,48 +104,42 @@ const Form = () => {
           <ListMedias />
         </div>
 
-        <div className="wrap__input">
-          <input
-            type="datetime-local"
-            name="auto__post__datetime"
-            id="auto__post__datetime"
-            onChange={(e) => {
-              setAutoPostDateTime(e.target.value);
-              e.target.value == "";
-            }}
-          />
-        </div>
+        {deviceSupportsBackgroundPeriodicSync && (
+          <div className="wrap__input">
+            <input
+              type="datetime-local"
+              name="auto__post__datetime"
+              id="auto__post__datetime"
+              onChange={(e) => {
+                setAutoPostDateTime(e.target.value);
+                e.target.value == "";
+              }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="submitters">
-        {!autoPostDateTime ? (
-          <button type="submit" className="post__a__feed">
-            {isPending ? (
-              <Loader height={20} width={20} />
-            ) : (
-              <>
-                <span>Post Now</span>
-                <span className="icon">
-                  <Newspaper size={20} />
-                </span>
-              </>
-            )}
+        <button type="submit" className="post__a__feed">
+          {isPending ? (
+            <Loader height={20} width={20} />
+          ) : (
+            <>
+              <span>Post Now</span>
+              <span className="icon">
+                <Newspaper size={20} />
+              </span>
+            </>
+          )}
+        </button>
+
+        {deviceSupportsBackgroundPeriodicSync && (
+          <button type="button" className="post__a__feed" onClick={handleDraft}>
+            <span>Plan a post</span>
+            <span className="icon">
+              <Calendar size={20} />
+            </span>
           </button>
-        ) : (
-          <>
-            {deviceSupportsServiceWorker && (
-              <button
-                type="button"
-                className="post__a__feed"
-                onClick={handleDraft}
-              >
-                <span>Plan a post</span>
-                <span className="icon">
-                  <Calendar size={20} />
-                </span>
-              </button>
-            )}
-          </>
         )}
       </div>
     </form>

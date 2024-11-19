@@ -2,9 +2,11 @@ import { Router } from "express";
 import {
   createAccount,
   getAccount,
+  getAllUsers,
   logUserIn,
   logUserOut,
   subscribeToPushNotifications,
+  unsubscribeFromPush,
   updateUserProfile,
 } from "../controllers/user.mjs";
 import passport from "passport";
@@ -21,6 +23,9 @@ userRouter.post(
   validateSession,
   subscribeToPushNotifications
 );
+
+userRouter.get("/unsubscribe-from-push", validateSession, unsubscribeFromPush);
+
 userRouter.post(
   "/",
   checkSchema(credentialsValidator),
@@ -28,6 +33,7 @@ userRouter.post(
   createAccount
 );
 userRouter.get("/", validateSession, getAccount);
+userRouter.get("/all", validateSession, getAllUsers);
 userRouter.post("/auth", passport.authenticate("local"), logUserIn);
 userRouter.patch(
   "/",

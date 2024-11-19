@@ -28,7 +28,6 @@ export const postCountListAndSkip = 2;
 
 export const maxMediaCount = 2;
 
-
 // For form validation
 export let nameMaxLength = 32;
 export let nameMinLength = 6;
@@ -37,3 +36,6 @@ export let passwordMaxLength = 16;
 export let passwordMinLength = 6;
 
 export let deviceSupportsServiceWorker = "serviceWorker" in navigator;
+
+export let deviceSupportsBackgroundPeriodicSync = false;
+

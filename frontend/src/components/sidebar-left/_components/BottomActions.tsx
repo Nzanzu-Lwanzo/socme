@@ -5,7 +5,7 @@ import { COLOR_SCHEMA } from "../../../utils/constants";
 import useAppStore from "../../../stores/AppStore";
 import { useLogUserOut } from "../../../hooks/userHooks";
 import Loader from "../../cross-app/Loader";
-import { deviceSupportsServiceWorker } from "../../../utils/constants";
+import { deviceSupportsBackgroundPeriodicSync } from "../../../utils/constants";
 
 const BottomActions = memo(() => {
   const setModal = useAppStore((state) => state.setModal);
@@ -24,7 +24,7 @@ const BottomActions = memo(() => {
         <Settings size={20} stroke={COLOR_SCHEMA.white} />
       </button>
 
-      {deviceSupportsServiceWorker && (
+      {deviceSupportsBackgroundPeriodicSync && (
         <Link to="/draft" className="action">
           <CalendarRange size={20} stroke={COLOR_SCHEMA.white} />
         </Link>

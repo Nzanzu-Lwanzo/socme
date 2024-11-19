@@ -37,14 +37,21 @@ function App() {
   const { auth } = useAppStore();
 
   useEffect(() => {
-    const registerServiceWorker = async () => {
+    const registerServiceWorker = () => {
       if ("serviceWorker" in navigator && !navigator.serviceWorker.controller) {
-        await navigator.serviceWorker.register("/sw.js", {
-          scope: "/",
-          type: "module",
-        });
-
-        return true;
+        navigator.serviceWorker
+          .register("/sw.js", {
+            scope: "/",
+            type: "module",
+          })
+          .then(() => {
+            // Registrer background periodic sync
+            try {
+            } catch (e) {
+              // Set an interval to sync
+            }
+          })
+          .catch((e) => console.log(e));
       }
     };
 

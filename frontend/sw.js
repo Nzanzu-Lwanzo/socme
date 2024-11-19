@@ -67,7 +67,6 @@ self.addEventListener("message", async (event) => {
           post,
           action: data.action,
         });
-        
       } catch (e) {
         postMessageToClient({
           ok: false,
@@ -76,6 +75,48 @@ self.addEventListener("message", async (event) => {
         });
         break;
       }
+    }
+  }
+});
+
+self.addEventListener("push", async (event) => {
+  const post = await event.data.json(); // So far, it's Ok : the post is being received and successfully parsed
+
+  event.waitUntil(
+    self.registration.showNotification("Socme", {
+      body: `${post.author.name} just posted this : ${post.textContent.slice(
+        0,
+        64
+      )}`,
+      tag: post.author._id,
+      data: post._id, // So we can handle like and dislike on click
+      actions: [
+        {
+          action: "like",
+          type: "button",
+          title: "Like",
+        },
+        {
+          action: "dislike",
+          type: "button",
+          title: "Dislike",
+        },
+      ],
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  const notification = event.notification;
+  switch (event.action) {
+    case "like": {
+      console.log("You liked this post");
+      notification.close();
+    }
+
+    case "dislike": {
+      console.log("You disliked this post");
+      notification.close();
     }
   }
 });

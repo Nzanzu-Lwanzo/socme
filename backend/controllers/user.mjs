@@ -7,7 +7,33 @@ import { v2 as cloudinary } from "cloudinary";
 import "../utils/cloudinary.setup.mjs";
 import { nanoid } from "nanoid";
 
-export const subscribeToPushNotifications = (req, res) => {
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+};
+
+export const getAllUserSubscriptions = async (uid) => {
+  try {
+    const users = await User.find(
+      {
+        pushSubscription: { $exists: true, $ne: null },
+        _id: { $ne: uid },
+      },
+      { pushSubscription: true }
+    );
+
+    return users;
+  } catch (e) {
+    return [];
+  }
+};
+
+export const subscribeToPushNotifications = async (req, res) => {
   const { subscription } = req.body;
 
   try {
@@ -15,11 +41,32 @@ export const subscribeToPushNotifications = (req, res) => {
       return res.sendStatus(400);
     }
 
-    User.findByIdAndUpdate(req.user._id, {
-      $set: { pushSubscription: subscription },
-    });
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: { pushSubscription: subscription },
+      },
+      { new: true }
+    );
 
-    res.sendStatus(200);
+    res.status(200).json(user);
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+};
+
+export const unsubscribeFromPush = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: { pushSubscription: null },
+      },
+      { new: true }
+    );
+
+    res.status(200).json(user);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

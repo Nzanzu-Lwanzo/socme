@@ -24,6 +24,7 @@ export interface User extends StateUserType {
   createdAt: string;
   updatedAt: string;
   _v: number;
+  pushSubscription: any;
 }
 
 export type PopulateUserType = Pick<User, "_id" | "name" | "picture">;

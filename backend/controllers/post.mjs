@@ -4,7 +4,9 @@ import { v2 as cloudinary } from "cloudinary";
 import { isValidObjectId } from "mongoose";
 import { nanoid } from "nanoid";
 import Comment from "../db/models/comments.mjs";
-import { populate } from "dotenv";
+import { getAllUserSubscriptions } from "./user.mjs";
+import webpush from "web-push";
+import User from "../db/models/user.mjs";
 
 const saveMediaFilesOnCloud = async (files) => {
   if (!files) return [];
@@ -69,6 +71,32 @@ export const saveAPost = async (req, res) => {
     // *******************************************************
 
     res.status(201).json(createdPost);
+
+    // Push a notification to all subscribed users
+    const users = await getAllUserSubscriptions(req.user._id);
+
+    users.forEach(async (user) => {
+      const { pushSubscription, _id } = user;
+      try {
+        if (pushSubscription.endpoint) {
+          webpush.sendNotification(
+            pushSubscription,
+            JSON.stringify(createdPost),
+            {}
+          );
+        }
+      } catch (e) {
+        if (e.statusCode >= 400) {
+          await User.findByIdAndUpdate(
+            _id,
+            {
+              $set: { pushSubscription: null },
+            },
+            { new: true }
+          );
+        }
+      }
+    });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

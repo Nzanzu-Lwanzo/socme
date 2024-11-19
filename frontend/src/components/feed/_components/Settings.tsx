@@ -1,4 +1,12 @@
+import { useSetPushNotifications } from "../../../hooks/notificationsHooks";
+import useAppStore from "../../../stores/AppStore";
+
 const Settings = () => {
+  const { subscribeToPush, unsubscribeFromPush } = useSetPushNotifications();
+  const auth = useAppStore((state) => state.auth);
+
+  console.log(auth);
+
   return (
     <div className="list__settings">
       <div className="setting">
@@ -8,8 +16,21 @@ const Settings = () => {
           activated notifications for, reminding you to post a feed you planned
           to post, ...
         </label>
-        <input type="checkbox" name="notify" id="notify" />
+        <input
+          type="checkbox"
+          name="notify"
+          id="notify"
+          defaultChecked={!!auth?.pushSubscription}
+          onChange={(e) => {
+            if (e.target.checked) {
+              subscribeToPush();
+            } else {
+              unsubscribeFromPush();
+            }
+          }}
+        />
       </div>
+
       <div className="setting">
         <label htmlFor="sound">
           A sound will be played in each of the following situations : a new

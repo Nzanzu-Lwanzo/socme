@@ -1,14 +1,18 @@
 import { NavLink } from "react-router-dom";
 import { User, Settings, Plus, BellDot, CalendarRange } from "lucide-react";
+import { deviceSupportsBackgroundPeriodicSync } from "../../utils/constants";
 
 const NavBar = () => {
   return (
     <header className="main__header">
       <div className="logo"></div>
       <div className="actions">
-        <NavLink to="/draft" className="header__btn">
-          <CalendarRange size={20} />
-        </NavLink>
+        {deviceSupportsBackgroundPeriodicSync && (
+          <NavLink to="/draft" className="header__btn">
+            <CalendarRange size={20} />
+          </NavLink>
+        )}
+
         <NavLink to="/notifications" className="header__btn">
           <BellDot size={20} />
         </NavLink>
