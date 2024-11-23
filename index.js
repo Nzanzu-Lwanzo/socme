@@ -17,7 +17,7 @@ import cookieParser from "cookie-parser";
 
 // VARIABLES AND CONSTANTS
 const App = express();
-const ENV = "prod";
+const ENV = "dev";
 const PORT = process.env.PORT || 5000;
 const SECRET = process.env.SECRET;
 const __dirname = dirname(fileURLToPath(import.meta.url));

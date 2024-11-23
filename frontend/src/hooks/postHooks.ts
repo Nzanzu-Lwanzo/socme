@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useTransition } from "react";
 import { enqueueSnackbar } from "notistack";
 import useFeedFormStore from "../stores/FeedFormStore";
+import { useFilterAndSearchContext } from "../contexts/FilterAndSearchContext";
 
 export const usePostAPost = (onSucces?: () => void) => {
   const addPost = useAppStore((state) => state.addPost);
@@ -219,16 +220,44 @@ export const useDeleteCloudImage = () => {
 };
 
 export const useFilterAndSearch = () => {
+  const { by } = useFilterAndSearchContext();
+  const setPosts = useAppStore((state) => state.setPosts);
+  const [pending, startTransition] = useTransition();
+
   return {
-    showAll: () => {},
-    showMyPosts: () => {},
-    showPostByAuthor: (e: string) => {
-      e.toLocaleLowerCase();
+    search: async function (hint: string | undefined) {
+      try {
+        const response = await Axios.post(
+          BASE_URL.concat(`/post/search/?by=${by}`),
+          { hint },
+          { withCredentials: true }
+        );
+
+        if (response.status < 400) {
+          startTransition(() => setPosts(response.data));
+        }
+      } catch (e) {
+        handleErrors(e as AxiosError);
+      }
     },
 
-    showPostByTextContent: (e: string) => {
-      e.toLocaleLowerCase();
+    getAll: async function () {
+      try {
+        const response = await Axios.get(BASE_URL.concat(`/post`), {
+          withCredentials: true,
+        });
+
+        if (response.status < 400) {
+          startTransition(() => setPosts(response.data));
+        }
+
+        return response.data;
+      } catch (e) {
+        handleErrors(e as AxiosError);
+      }
     },
+
+    pending,
   };
 };
 

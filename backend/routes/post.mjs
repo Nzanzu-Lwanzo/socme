@@ -9,6 +9,7 @@ import {
   deletePostImage,
   saveCommentOnPost,
   deleteComment,
+  searchPosts,
 } from "../controllers/post.mjs";
 import { validateIdParam, validateSession } from "../utils/middlewares.mjs";
 import fileUploader from "../utils/multer.setup.mjs";
@@ -28,6 +29,8 @@ postRouter.post(
   validateIdParam,
   saveCommentOnPost
 );
+
+postRouter.post("/search/", validateSession, searchPosts);
 
 postRouter.delete(
   "/comment/:postId/:commentId",

@@ -402,6 +402,10 @@ $sectionsHeight: calc(100vh - $header__height);
         padding: 0.3rem 0.5rem;
         background-color: transparent;
       }
+
+      button {
+        cursor:pointer;
+      }
     }
 
     .actions {

@@ -410,3 +410,127 @@ export const deleteComment = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const searchPosts = async (req, res) => {
+  let { by } = req.query;
+  let { hint } = req.body;
+
+  try {
+    switch (by) {
+      case "my_posts": {
+        const posts = await Post.find(
+          { $text: { $search: hint } },
+          {},
+          {
+            populate: [
+              {
+                path: "author",
+                select: "_id name picture",
+              },
+              {
+                path: "comments",
+                perDocumentLimit: 10,
+                populate: {
+                  path: "author",
+                  select: "_id name picture",
+                },
+              },
+            ],
+          }
+        );
+
+        res.status(200).json(posts);
+
+        // Get out of this switch-case
+        break;
+      }
+
+      case "name": {
+        const allPosts = await Post.find(
+          {},
+          {},
+          {
+            populate: {
+              path: "author",
+              select: { _id: false, name: true },
+              match: {
+                name: {
+                  $regex: hint,
+                  $options: "i",
+                },
+              },
+            },
+          }
+        );
+
+        const posts = allPosts.filter((post) => post.author !== null);
+
+        res.status(200).json(posts);
+
+        // Get out of this switch-case
+        break;
+      }
+
+      case "textContent": {
+        const posts = await Post.find(
+          {
+            $text: { $search: hint },
+          },
+          {},
+          {
+            populate: [
+              {
+                path: "author",
+                select: "_id name picture",
+              },
+              {
+                path: "comments",
+                perDocumentLimit: 10,
+                populate: {
+                  path: "author",
+                  select: "_id name picture",
+                },
+              },
+            ],
+          }
+        );
+
+        res.status(200).json(posts);
+
+        // Get out of this switch-case
+        break;
+      }
+
+      case "all": {
+        const posts = await Post.find(
+          {},
+          {},
+          {
+            populate: [
+              {
+                path: "author",
+                select: "_id name picture",
+              },
+              {
+                path: "comments",
+                perDocumentLimit: 10,
+                populate: {
+                  path: "author",
+                  select: "_id name picture",
+                },
+              },
+            ],
+          }
+        );
+
+        res.status(200).json(posts);
+
+        // Get out of this switch-case
+        break;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+};

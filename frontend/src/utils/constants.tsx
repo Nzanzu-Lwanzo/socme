@@ -13,7 +13,7 @@ export const EMOJIS = {
 export const PUSH_PUBLIC_KEY =
   "BHGUVgzaxey1Y2cBnJs4I7P3Ry-0Zu4cvs_kOtOOymHc-TXZLqFiZ-9il7xySKzVZ2mmCXMcHXCnlTVqrGI6VtY";
 
-const ENV: "prod" | "dev" = "prod";
+const ENV: "prod" | "dev" = "dev";
 
 const MAP_ENV_ORIGIN = {
   prod: document.location.origin,
@@ -28,7 +28,7 @@ export const postCountListAndSkip = 2;
 
 export const maxMediaCount = 2;
 
-// For form validation
+// For form validation - must be the same as in the models schema definition
 export let nameMaxLength = 32;
 export let nameMinLength = 6;
 
